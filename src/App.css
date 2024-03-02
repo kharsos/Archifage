@@ -111,6 +111,7 @@ header{
 }
 .split{
   margin-left: 283px;
+
 }
 header div{
   display: flex;
@@ -119,3 +120,8 @@ header div{
 
 
 
+.filter{
+  display: flex;
+  width: 50%;
+  margin: 0 auto;
+}

@@ -1,7 +1,8 @@
 import React from 'react'
-import Menu from './Menu';
 import { useEffect,useState } from 'react';
+import { Link } from 'react-router-dom';
 import '../App.css'
+import './Menu.css'
 import axios from 'axios';
 function Login(){
     const [formateur,setFormateur] = useState([])
@@ -35,7 +36,13 @@ function Login(){
     }
     return(
         <div>
-            <Menu />
+            <nav className="nav">
+                <img src='ofppt.png' alt="logo"></img>
+                <h2 style={{color:'white'}}>NTIC SYBA</h2>
+                <hr></hr>
+                <button type='button' className="btns"><img src="home.png" alt="home"></img><span>Teachers</span></button>
+                <Link to={'/Admin/Groupes'}><button type='button' className="btns" style={{backgroundColor:'transparent',border:'none'}}><img src="graduate.png" alt="home"></img><span>Groupes</span></button></Link>
+            </nav>
             <div className='split'>
                 <header>
                     <div>
