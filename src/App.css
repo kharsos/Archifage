@@ -113,6 +113,10 @@ header{
   margin-left: 283px;
 
 }
+.split section {
+  text-align: center;
+}
+
 header div{
   display: flex;
   align-items: center;

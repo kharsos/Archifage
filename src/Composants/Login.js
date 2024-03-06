@@ -20,7 +20,7 @@ function Login(){
         axios.get('http://localhost:8080/formateur')
         .then(res=>setFormateur(res.data))
         .catch(err=>console.log(err))
-    },[])
+    })
 
     const teacherdate = () =>{
         if(teacher.email!==''&&teacher.gendre!==''&&teacher.name!==''&&teacher.password!==''){
