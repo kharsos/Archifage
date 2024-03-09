@@ -29,11 +29,11 @@ export default function Groupes(){
     return (
         <div>
              <nav className="nav">
-                <img src='ofppt.png' alt="logo"></img>
+                <img src='http://localhost:3000/ofppt.png' alt="logo"></img>
                 <h2 style={{color:'white'}}>NTIC SYBA</h2>
                 <hr></hr>
-                <Link to={'/login'}><button type='button' style={{backgroundColor:'transparent',border:'none'}} className="btns"><img src="home.png" alt="home"></img><span>Teachers</span></button></Link>
-                <button type='button' className="btns" ><img src="graduate.png" alt="home"></img><span>Groupes</span></button>
+                <Link to={'/login'}><button type='button' style={{backgroundColor:'transparent',border:'none'}} className="btns"><img src="http://localhost:3000/home.png" alt="home"></img><span>Teachers</span></button></Link>
+                <button type='button' className="btns" ><img src="http://localhost:3000/graduate.png" alt="home"></img><span>Groupes</span></button>
             </nav>
             <div className="split">
             <header>
@@ -54,7 +54,7 @@ export default function Groupes(){
                     </div>                    
                     <div className="filter">
                         {groupes.length>0?groupes.map((e)=>{
-                            return <button type="button" style={{backgroundColor:'transparent',color:'#152259'}} onClick={()=>navigate(`/Admin/Groupe/${e._id}/Modules`)} className="btns">{e._id}</button>
+                            return <button type="button" style={{backgroundColor:'transparent',color:'#152259',margin:'10px'}} onClick={()=>navigate(`/Admin/Groupe/${e._id}/Modules`)} className="btns">{e._id}</button>
                         })
                         :'no groupe in this filiere'}
                     </div></>

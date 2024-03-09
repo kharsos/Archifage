@@ -129,3 +129,16 @@ header div{
   width: 50%;
   margin: 0 auto;
 }
+
+.notif{
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.notif div{
+  width : 300px;
+  text-align: justify;
+  padding: 20px;
+  border-radius: 10px;
+}

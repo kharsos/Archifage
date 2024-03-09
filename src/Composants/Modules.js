@@ -49,11 +49,11 @@ export default function Modules(){
     return(
         <div>
              <nav className="nav">
-                <img src="ofppt.png" alt="logo"></img>
+                <img src='http://localhost:3000/ofppt.png' alt="logo"></img>
                 <h2 style={{color:'white'}}>NTIC SYBA</h2>
                 <hr></hr>
-                <Link to={'/login'}><button type='button' style={{backgroundColor:'transparent',border:'none'}} className="btns"><img src="home.png" alt="home"></img><span>Teachers</span></button></Link>
-                <button type='button' className="btns" ><img src="graduate.png" alt="home"></img><span>Groupes</span></button>
+                <Link to={'/login'}><button type='button' style={{backgroundColor:'transparent',border:'none'}} className="btns"><img src="http://localhost:3000/home.png" alt="home"></img><span>Formateur</span></button></Link>
+                <button type='button' className="btns" ><img src="http://localhost:3000/graduate.png" alt="home"></img><span>Groupes</span></button>
             </nav>
             <div className="split">
                 <header>

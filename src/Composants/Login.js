@@ -1,12 +1,13 @@
 import React from 'react'
 import { useEffect,useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate , Link} from 'react-router-dom';
 import '../App.css'
 import './Menu.css'
 import axios from 'axios';
 function Login(){
     const [formateur,setFormateur] = useState([])
     const [form,setForm]=useState(false)
+    const navigate = useNavigate()
     const [teacher,setTeacher]=useState(
         {
             name:'',
@@ -34,20 +35,26 @@ function Login(){
             console.log(teacher)
         }
     }
+
+    const deleteTeacher = (id) =>{
+        axios.delete(`http://localhost:8080/delete/${id}`)
+        .then(res=>console.log(res))
+        .catch(err=>console.log(err))
+    }
     return(
         <div>
             <nav className="nav">
                 <img src='ofppt.png' alt="logo"></img>
                 <h2 style={{color:'white'}}>NTIC SYBA</h2>
                 <hr></hr>
-                <button type='button' className="btns"><img src="home.png" alt="home"></img><span>Teachers</span></button>
+                <button type='button' className="btns"><img src="home.png" alt="home"></img><span>Formateur</span></button>
                 <Link to={'/Admin/Groupes'}><button type='button' className="btns" style={{backgroundColor:'transparent',border:'none'}}><img src="graduate.png" alt="home"></img><span>Groupes</span></button></Link>
             </nav>
             <div className='split'>
                 <header>
                     <div>
                         <button type='button' className='btnb'>Export CSV</button>
-                        <button type='button' className='btnt' onClick={()=>setForm(!form)}>Add Teacher</button>
+                        <button type='button' className='btnt' onClick={()=>setForm(!form)}>Ajouter Formateur</button>
                     </div>
                     <button type='button' className='btnb'>Log out</button>
                 </header>
@@ -55,17 +62,24 @@ function Login(){
                     {!form?<>
                     <input type='text' placeholder='search for a teacher by email'></input>
                     <div>
-                        <table className="table table-stripped table-primary">
+                        <table className="table table-striped">
+                            <thead>
                             <tr>
                                 <th>Name</th>
                                 <th>Email Adresse</th>
                                 <th>Gender</th>
+                                <th colSpan={2}>Action</th>
                             </tr>
+                            </thead>
+                            <tbody>
                             {formateur.map(e=><tr>
                                 <td>{e.name}</td>
                                 <td>{e.email}</td>
                                 <td>{e.gendre}</td>
+                                <td><button className='btn btn-success' onClick={()=>navigate(`/Admin/modifier_formateur/${e._id}`)}>Modifier</button></td>
+                                <td><button className='btn btn-danger' onClick={()=>deleteTeacher(e._id)}>Supprimer</button></td>
                             </tr>)}
+                            </tbody>
                         </table>
                     </div>
                     </>:

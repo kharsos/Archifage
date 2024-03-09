@@ -3,6 +3,7 @@ const app = express()
 const cors= require('cors')
 const Users=require('./db')
 const Groupes = require('./grp')
+const Notification = require('./notification')
 const mongoose = require('mongoose')
 app.use(express.json())
 app.use(cors())
@@ -21,6 +22,12 @@ app.post('/post',async(req,res)=>{
   })
 app.get('/formateur',(req,res)=>{
     Users.find({type:'formateur'})
+    .then(formateur=>res.status(201).json(formateur))
+    .catch(err=>res.status(400).json(err))
+})
+
+app.get('/formateur/:id',(req,res)=>{
+    Users.findOne({_id:req.params.id})
     .then(formateur=>res.status(201).json(formateur))
     .catch(err=>res.status(400).json(err))
 })
@@ -53,6 +60,37 @@ app.put('/module/:id',(req,res)=>{
     .catch(err=>res.json({err:'not'}))
 })
 
+app.delete('/delete/:id',(req,res)=>{
+    Users.deleteOne({_id:req.params.id})
+    .then(user=>res.status(200).json(user))
+    .catch(err=>res.status(400).json(err))
+})
 
+app.put('/update_formateur/:id',(req,res)=>{
+    const data = req.body
+    Users.updateOne({_id:req.params.id},data)
+    .then(user=>res.status(200).json(user))
+    .catch(err=>res.status(400).json(err))
+})
+
+app.get('/notification',(req,res)=>{
+    Notification.find()
+    .then(notif=>res.status(200).json(notif))
+    .catch(err=>res.status(400).json(err))
+})
+
+app.post('/post/notification',async(req,res)=>{
+    const {notification} = req.body
+    let id = await Notification.findOne().sort({_id:-1})
+    if(id===null){
+        id=0
+    }
+    else{id=id._id}
+    console.log(id)
+    const newNotification = new Notification({_id:id+1,notification:notification})
+    newNotification.save()
+    .then(notif=>res.status(200).json(notif))
+    .catch(err=>res.status(400).json(err))
+})
 
 app.listen(8080,console.log('connexion reussi !!')) 
