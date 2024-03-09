@@ -31,7 +31,8 @@ export default function Signup(){
 		Users.map((e)=>{
 			if(e.email===email&&e.password===password){
 				if(e.type==='admin'){navigate('/login')}
-				else{alert('formateur !!')}
+				else if(e.type==='formateur'){alert('formateur !!')}
+				else{navigate('/notification')}
 				test=true
 			}
 		})
