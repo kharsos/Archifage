@@ -47,7 +47,7 @@ function Login(){
                 <img src='ofppt.png' alt="logo"></img>
                 <h2 style={{color:'white'}}>NTIC SYBA</h2>
                 <hr></hr>
-                <button type='button' className="btns"><img src="home.png" alt="home"></img><span>Formateur</span></button>
+                <button type='button' className="btns"><img src="http://localhost:3000/home.png" alt="home"></img><span>Formateur</span></button>
                 <Link to={'/Admin/Groupes'}><button type='button' className="btns" style={{backgroundColor:'transparent',border:'none'}}><img src="graduate.png" alt="home"></img><span>Groupes</span></button></Link>
             </nav>
             <div className='split'>
@@ -56,7 +56,10 @@ function Login(){
                         <button type='button' className='btnb'>Export CSV</button>
                         <button type='button' className='btnt' onClick={()=>setForm(!form)}>Ajouter Formateur</button>
                     </div>
+                    <div>
+                    <Link to={'/ShowNotifications'}><img style={{width:'30px'}} src='http://localhost:3000/bell.png'></img></Link>
                     <button type='button' className='btnb'>Log out</button>
+                    </div>
                 </header>
                 <section>
                     {!form?<>
@@ -78,6 +81,7 @@ function Login(){
                                 <td>{e.gendre}</td>
                                 <td><button className='btn btn-success' onClick={()=>navigate(`/Admin/modifier_formateur/${e._id}`)}>Modifier</button></td>
                                 <td><button className='btn btn-danger' onClick={()=>deleteTeacher(e._id)}>Supprimer</button></td>
+                                <td><button className='btn btn-light' onClick={()=>navigate(`/AffecterFormateur/${e._id}`)}>+</button></td>
                             </tr>)}
                             </tbody>
                         </table>

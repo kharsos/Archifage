@@ -4,6 +4,7 @@ const cors= require('cors')
 const Users=require('./db')
 const Groupes = require('./grp')
 const Notification = require('./notification')
+const Filiere = require('./filiere')
 const mongoose = require('mongoose')
 app.use(express.json())
 app.use(cors())
@@ -53,6 +54,14 @@ app.get('/groupe/:id',(req,res)=>{
     .catch(err=>res.status(400).json(err))
 })
 
+app.get('/groupe/filiere/:filiere',(req,res)=>{
+    const filiere =req.params.filiere
+    console.log(filiere)
+    Groupes.find({filiere:filiere})
+    .then(groupes=>res.status(200).json(groupes))
+    .catch(err=>res.status(400).json(err))
+})
+
 app.put('/module/:id',(req,res)=>{
     const data = req.body
     Groupes.updateOne({ _id:req.params.id },{$push:{Modules:data}})
@@ -90,6 +99,19 @@ app.post('/post/notification',async(req,res)=>{
     const newNotification = new Notification({_id:id+1,notification:notification})
     newNotification.save()
     .then(notif=>res.status(200).json(notif))
+    .catch(err=>res.status(400).json(err))
+})
+
+app.get('/filiere/:name',(req,res)=>{
+    let filiere=req.params.name
+    Filiere.findOne({filiere:filiere})
+    .then(filiere=>res.status(200).json(filiere))
+    .catch(err=>res.status(400).json(err))
+})
+
+app.get('/filiere',(req,res)=>{
+    Filiere.find()
+    .then(filiere=>res.status(200).json(filiere))
     .catch(err=>res.status(400).json(err))
 })
 

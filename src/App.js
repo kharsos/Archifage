@@ -7,6 +7,8 @@ import Login from "./Composants/Login";
 import Modules from "./Composants/Modules";
 import ModifierFormateur from "./Composants/ModifierFormateur";
 import Notification from "./Composants/Notifications";
+import ShowNotification from "./Composants/ShowNotifications";
+import AffecterFormateur from "./Composants/AffecterFormateur";
 export default function App(){
    
     
@@ -20,6 +22,8 @@ export default function App(){
                 <Route path="/Admin/Groupe/:id/Modules" element={<Modules />}></Route>
                 <Route path="/Admin/modifier_formateur/:id" element={<ModifierFormateur />}></Route>
                 <Route path="/notification" element={<Notification />}></Route>
+                <Route path="/ShowNotifications" element={<ShowNotification />}></Route>
+                <Route path="/AffecterFormateur/:id" element={<AffecterFormateur />}></Route>
             </Routes>  
         </BrowserRouter>
        

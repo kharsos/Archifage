@@ -5,6 +5,7 @@ export default function Modules(){
     const {id}=useParams()
     const [grp,setGrp]=useState({})
     const [module,setModule]=useState(false)
+    const [filiere,setFiliere]=useState({})
     const [formateur,setFormateur] = useState([])
     const [info,setInfo]=useState({
         id:'',
@@ -18,6 +19,12 @@ export default function Modules(){
     .then(res=>setGrp(res.data))
     .catch(err=>console.log(err))
     },[info.id])
+
+    useEffect(()=>{
+        axios.get(`http://localhost:8080/filiere/${grp.filiere}`)
+        .then(res=>setFiliere(res.data))
+        .catch(err=>console.log(err))
+    })
 
     useEffect(()=>{
         axios.get('http://localhost:8080/formateur')
@@ -62,7 +69,8 @@ export default function Modules(){
                 </header>
                 <section>
                     <h1 style={{color:'#0AD1C8'}}>Groupe {grp._id}</h1>
-                    {!module?<table style={{marginTop:'20px'}} className="table table-stripped-primary">
+                    {!module?<table style={{marginTop:'20px'}} className="table table-striped">
+                        <thead>
                         <tr>
                             <th colSpan={2}></th>
                             <th colSpan={3}>Controle N1</th>
@@ -72,6 +80,8 @@ export default function Modules(){
                             <th>EFM</th>
                             <th>PV</th>
                         </tr>
+                        </thead>
+                        <tbody>
                         <tr>
                             <th colSpan={2}>Module</th>
                             <th>enonce</th>
@@ -83,6 +93,7 @@ export default function Modules(){
                             <th>enonce</th>
                             <th>presence</th>
                             <th>copie</th>
+                            <th colSpan={3}></th>
                         </tr>
                         {grp.Modules==null?'':grp.Modules.map((e)=>{return <tr>
                             <td colSpan={2}><h6>{e.name}</h6></td>
@@ -94,12 +105,17 @@ export default function Modules(){
                                 </>
                             })}
                         </tr>})}
+                        </tbody>
                     </table>
                     :<form>
                         <label className="form-label">id</label>
                         <input onChange={(e)=>setInfo({...info,id:e.target.value})} className="form-control" type="text"></input>
                         <label className="form-label">name</label>
-                        <input onChange={(e)=>setInfo({...info,name:e.target.value})} className="form-control" type="text"></input>
+                        <select onClick={(e)=>setInfo({...info,name:e.target.value})}>
+                            {filiere.modules.map((e)=><option value={e}>
+                                {e}
+                            </option>)}
+                        </select>
                         <select onClick={(e)=>setInfo({...info,type:e.target.value})}>
                             <option value={''} selected disabled>Choisisser type de module</option>
                             <option value={'R'}> Regionale</option>

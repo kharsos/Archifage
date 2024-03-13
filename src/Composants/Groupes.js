@@ -42,15 +42,15 @@ export default function Groupes(){
                 </header>
                 <section>
                     {!grp?<><div className="filter">
-                        <select id="grp" className="form-select">
+                        <select id="grp" className="form-select" onClick={(e)=>setFiliere(e.target.value)}>
                             <option value={''}>Choisisser votre filiere</option>
-                            <option>web full stack</option>
+                            <option>developpement web full stack</option>
                             <option>developpement digital</option>
                             <option>application mobile</option>
                             <option>cyber security</option>
                             <option>infrastructure digital</option>
                         </select>
-                        <button type="button" onClick={()=>setFiliere(document.getElementById('grp').value)}>Filter</button>
+                        <button type="button">Filter</button>
                     </div>                    
                     <div className="filter">
                         {groupes.length>0?groupes.map((e)=>{
@@ -64,7 +64,7 @@ export default function Groupes(){
                         <input type='text' className="form-control" onChange={(e)=>setInfo({...info,_id:e.target.value})}></input>
                         <select onClick={(e)=>setInfo({...info,filiere:e.target.value})} className="form-select">
                             <option value={''}>Choisisser votre filiere</option>
-                            <option>web full stack</option>
+                            <option>developpement web full stack</option>
                             <option>developpement digital</option>
                             <option>application mobile</option>
                             <option>cyber security</option>
