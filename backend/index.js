@@ -48,7 +48,6 @@ app.post('/groupe/post',(req,res)=>{
 })
 app.get('/groupe/:id',(req,res)=>{
     const id =req.params.id
-    console.log(id)
     Groupes.findOne({_id:id})
     .then(groupes=>res.status(200).json(groupes))
     .catch(err=>res.status(400).json(err))
@@ -62,11 +61,15 @@ app.get('/groupe/filiere/:filiere',(req,res)=>{
     .catch(err=>res.status(400).json(err))
 })
 
-app.put('/module/:id',(req,res)=>{
+app.put('/module/:id',async (req,res)=>{
     const data = req.body
-    Groupes.updateOne({ _id:req.params.id },{$push:{Modules:data}})
+    if(data.name!=''&&data.formateur>0){
+    const result=await Filiere.findOne({modules:{$elemMatch:{name:data.name}}},{'modules.$':1})
+    const {id,type}=result.modules[0]
+    Groupes.updateOne({ _id:req.params.id },{$push:{Modules:{...data,id:id,type:type}}})
     .then(grp=>res.json(grp))
     .catch(err=>res.json({err:'not'}))
+    }
 })
 
 app.delete('/delete/:id',(req,res)=>{
@@ -112,6 +115,12 @@ app.get('/filiere/:name',(req,res)=>{
 app.get('/filiere',(req,res)=>{
     Filiere.find()
     .then(filiere=>res.status(200).json(filiere))
+    .catch(err=>res.status(400).json(err))
+})
+
+app.get('/name_module',(req,res)=>{
+    Filiere.findOne({modules:{$elemMatch:{name:'front end'}}},{'modules.$':1})
+    .then(filiere=>res.status(200).json(filiere.modules[0]))
     .catch(err=>res.status(400).json(err))
 })
 

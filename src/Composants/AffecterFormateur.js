@@ -9,9 +9,7 @@ export default function AffecterFormateur(){
     const [groupe,setGroupe]=useState('')
     const [modules,setModules]=useState([])
     const [info,setInfo]=useState({
-        id:'',
         name:'',
-        type:'',
         formateur:id,
         constroles:[]
     })
@@ -21,16 +19,35 @@ export default function AffecterFormateur(){
         .then(res=>setFiliere(res.data))
         .catch(err=>console.log(err))
     })
-
     useEffect(()=>{
         axios.get(`http://localhost:8080/groupe/filiere/${fil}`)
         .then(res=>setGrp(res.data))
         .catch(err=>console.log(err))
-        },[fil])
+    },[fil])
 
+    useEffect(()=>{
+        if(fil!=''&&groupe==''){
+        const filter = filiere.filter(e=>e.filiere==fil)
+        setModules(filter[0].modules)
+        console.log(modules)
+        }
+        else if(fil!=''&&groupe!=''){
+            const filterNames = grp.filter(e=>e._id==groupe)[0].Modules
+            const filter = filiere.filter(e=>e.filiere==fil)
+            setModules(filter[0].modules.filter(obj => !filterNames.includes(obj.name)))
+        }
+    },[fil,groupe])
 
-
-
+    const addModule=async()=>{
+        if(info.formateur>0&&info.name==''){
+            alert('verifier les information !!')
+        }
+        else{
+            await axios.put(`http://localhost:8080/module/${groupe}`,info)
+            .then(()=>console.log('data created !'))
+            .catch(err=>console.log(err))
+        }
+    }
     return  <div>
     <nav className="nav">
        <img src='http://localhost:3000/ofppt.png' alt="logo"></img>
@@ -43,37 +60,27 @@ export default function AffecterFormateur(){
        <section>
            <form>
                 <label className="form-label">filiere</label>
-                    <select onClick={(e)=>{setfil(e.target.value);
-                    setModules(filiere.map(er=>{
-                        if(er.filiere===fil){
-                            return er.modules
-                        }
-                    }))
-                    }}>
-                        {filiere.map((e)=><option value={e}>
+                    <select onClick={(e)=>setfil(e.target.value)}>
+                        <option value={''}>Choisisser une filiere</option>
+                        {filiere.map((e)=><option value={e.filiere}>
                             {e.filiere}
                         </option>)}
                </select>
                <label className="form-label">Groupe</label>
-                    <select onClick={(e)=>setGroupe(e.target.value)}>
-                        {grp===null?'':grp.map((e)=><option value={e}>
-                            {e}
+                    <select onChange={(e)=>setGroupe(e.target.value)}>
+                        <option value={''}>Choisisser un groupe</option>
+                        {grp==null?'':grp.map((e)=><option value={e._id}>
+                            {e._id}
                         </option>)}
                </select>
-               <label className="form-label">id</label>
-               <input onChange={(e)=>setInfo({...info,id:e.target.value})} className="form-control" type="text"></input>
                <label className="form-label">name</label>
                <select onClick={(e)=>setInfo({...info,name:e.target.value})}>
-                   {modules.map((e)=><option value={e}>
-                       {e}
+                    <option value={''}>Choisisser un module</option>
+                   {modules==null?'':modules.map((e)=><option value={e.name}>
+                       {e.name}
                    </option>)}
                </select>
-               <select onClick={(e)=>setInfo({...info,type:e.target.value})}>
-                   <option value={''} selected disabled>Choisisser type de module</option>
-                   <option value={'R'}> Regionale</option>
-                   <option value={'L'}>Local</option>
-               </select>
-               <button type="button">Ajouter Module</button>
+               <button type="button" onClick={()=>addModule()}>Ajouter Module</button>
            </form>
        </section>
    </div>

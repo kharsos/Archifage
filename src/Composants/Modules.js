@@ -8,17 +8,17 @@ export default function Modules(){
     const [filiere,setFiliere]=useState({})
     const [formateur,setFormateur] = useState([])
     const [info,setInfo]=useState({
-        id:'',
-        name:'',
-        type:'',
+        name:"",
         formateur:0,
-        constroles:[]
+        controles:[]
     })
+    const [names,setNames]=useState([])
+
     useEffect(()=>{
     axios.get(`http://localhost:8080/groupe/${id}`)
     .then(res=>setGrp(res.data))
     .catch(err=>console.log(err))
-    },[info.id])
+    })
 
     useEffect(()=>{
         axios.get(`http://localhost:8080/filiere/${grp.filiere}`)
@@ -32,25 +32,19 @@ export default function Modules(){
         .catch(err=>console.log(err))
     },[])
 
+    const filter = () =>{
+        const filterNames = grp.Modules.map(obj =>obj.name)
+        setNames(filiere.modules.filter(obj => !filterNames.includes(obj.name)))
+    }
+
     const addModule=async()=>{
-        if(info.formateur===0&&info.id===''&&info.name===''&&info.type===''){
+        if(info.formateur>0&&info.name==''){
             alert('verifier les information !!')
         }
         else{
-            let test=false
-            grp.Modules.map(e=>{
-                if(e.id===info.id&&e.name===info.name){
-                    test=true
-                }
-            })
-            if(!test){
-                await axios.put(`http://localhost:8080/module/${id}`,info)
-                .then(()=>console.log('data created !'))
-                .catch(err=>console.log(err))
-            }
-            else{
-                alert('module deja exister')
-            }
+            await axios.put(`http://localhost:8080/module/${id}`,info)
+            .then(()=>console.log('data created !'))
+            .catch(err=>console.log(err))
         }
     }
     return(
@@ -64,7 +58,7 @@ export default function Modules(){
             </nav>
             <div className="split">
                 <header>
-                    <button type='button' style={{marginLeft:'10px'}} onClick={()=>setModule(!module)} className='btnt'>Add Module</button>
+                    <button type='button' style={{marginLeft:'10px'}} onClick={()=>{setModule(!module);filter()}} className='btnt'>Add Module</button>
                     <button type='button' className='btnb'>Log out</button>
                 </header>
                 <section>
@@ -73,10 +67,9 @@ export default function Modules(){
                         <thead>
                         <tr>
                             <th colSpan={2}></th>
-                            <th colSpan={3}>Controle N1</th>
-                            <th colSpan={3}>Controle N2</th>
-                            <th colSpan={3}>Controle N3</th>
-                            <th>Pv CC</th>
+                            <th colSpan={4}>Controle N1</th>
+                            <th colSpan={4}>Controle N2</th>
+                            <th colSpan={4}>Controle N3</th>
                             <th>EFM</th>
                             <th>PV</th>
                         </tr>
@@ -87,12 +80,15 @@ export default function Modules(){
                             <th>enonce</th>
                             <th>presence</th>
                             <th>copie</th>
+                            <th>PV</th>
                             <th>enonce</th>
                             <th>presence</th>
                             <th>copie</th>
+                            <th>PV</th>
                             <th>enonce</th>
                             <th>presence</th>
                             <th>copie</th>
+                            <th>PV</th>
                             <th colSpan={3}></th>
                         </tr>
                         {grp.Modules==null?'':grp.Modules.map((e)=>{return <tr>
@@ -102,27 +98,22 @@ export default function Modules(){
                                     <td>{!e.status.enonce?<input className="form-check-input" type="checkbox"  disabled></input>:<input type="checkbox" checked disabled></input>}</td>
                                     <td>{!e.status.presence?<input  className="form-check-input" type="checkbox" disabled></input>:<input type="checkbox" checked disabled></input>}</td>
                                     <td>{!e.status.copie?<input  className="form-check-input" type="checkbox" disabled></input>:<input type="checkbox" checked disabled></input>}</td>
+                                    <td>{!e.status.pv?<input  className="form-check-input" type="checkbox" disabled></input>:<input type="checkbox" checked disabled></input>}</td>
                                 </>
                             })}
                         </tr>})}
                         </tbody>
                     </table>
                     :<form>
-                        <label className="form-label">id</label>
-                        <input onChange={(e)=>setInfo({...info,id:e.target.value})} className="form-control" type="text"></input>
                         <label className="form-label">name</label>
                         <select onClick={(e)=>setInfo({...info,name:e.target.value})}>
-                            {filiere.modules.map((e)=><option value={e}>
-                                {e}
+                            <option value={''} selected disabled>Choisisser un modules</option>
+                            {names.map((e)=><option value={e.name}>
+                                {e.name}
                             </option>)}
                         </select>
-                        <select onClick={(e)=>setInfo({...info,type:e.target.value})}>
-                            <option value={''} selected disabled>Choisisser type de module</option>
-                            <option value={'R'}> Regionale</option>
-                            <option value={'L'}>Local</option>
-                        </select>
                         <select onClick={(e)=>setInfo({...info,formateur:e.target.value})}>
-                            <option value={0}>Choisisser le formateur</option>
+                            <option value={0} selected disabled>Choisisser le formateur</option>
                             {formateur.map(e=><option value={e._id}>{e.name}</option>)}
                         </select>
                         <button type="button" onClick={()=>addModule()}>Ajouter Module</button>

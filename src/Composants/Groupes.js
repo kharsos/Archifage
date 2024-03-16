@@ -50,7 +50,6 @@ export default function Groupes(){
                             <option>cyber security</option>
                             <option>infrastructure digital</option>
                         </select>
-                        <button type="button">Filter</button>
                     </div>                    
                     <div className="filter">
                         {groupes.length>0?groupes.map((e)=>{
