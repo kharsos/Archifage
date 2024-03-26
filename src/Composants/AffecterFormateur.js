@@ -34,7 +34,18 @@ export default function AffecterFormateur(){
         else if(fil!=''&&groupe!=''){
             const filterNames = grp.filter(e=>e._id==groupe)[0].Modules
             const filter = filiere.filter(e=>e.filiere==fil)
-            setModules(filter[0].modules.filter(obj => !filterNames.includes(obj.name)))
+            setModules(filter[0].modules.filter(obj =>{
+                    let test=false
+                    filterNames.map(e=>{
+                        if(e.name===obj.name){
+                            test=true
+                        }
+                    })
+                    if(!test){
+                        return obj
+                    }
+            }
+                ))
         }
     },[fil,groupe])
 
@@ -55,6 +66,7 @@ export default function AffecterFormateur(){
        <hr></hr>
        <Link to={'/login'}><button type='button' style={{backgroundColor:'transparent',border:'none'}} className="btns"><img src="http://localhost:3000/home.png" alt="home"></img><span>Formateur</span></button></Link>
        <button type='button' className="btns" ><img src="http://localhost:3000/graduate.png" alt="home"></img><span>Groupes</span></button>
+       <Link to={'/GestionFiliere'}><button type='button' className='btns' style={{backgroundColor:'transparent',border:'none'}}><img src="http://localhost:3001/book.png" alt="book"></img><span>Filieres</span></button></Link>
    </nav>
    <div className="split">
        <section>

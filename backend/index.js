@@ -124,4 +124,28 @@ app.get('/name_module',(req,res)=>{
     .catch(err=>res.status(400).json(err))
 })
 
+app.post('/post/filiere',async(req,res)=>{
+    const data = req.body
+    const _id=await Filiere.findOne().sort({_id:-1})
+    const newFiliere = new Filiere({...data,_id:Number(_id._id)+1})
+    newFiliere.save()
+    .then(fil=>res.status(200).json(fil))
+    .catch(err=>res.status(400).json(err))
+})
+
+app.get('/get/:id',(req,res)=>{
+    const id = req.params.id
+    Filiere.findOne({_id:Number(id)})
+    .then(fil=>res.status(200).json(fil))
+    .catch(err=>res.status(400).json(err))
+})
+
+app.put('/post/module/:id',(req,res)=>{
+    const id=req.params.id
+    const data = req.body
+    Filiere.updateOne({_id:id},{$push:{modules:{...data}}})
+    .then(fil=>res.status(200).json(fil))
+    .catch(err=>res.status(400).json(err))
+})
+
 app.listen(8080,console.log('connexion reussi !!')) 

@@ -9,6 +9,8 @@ import ModifierFormateur from "./Composants/ModifierFormateur";
 import Notification from "./Composants/Notifications";
 import ShowNotification from "./Composants/ShowNotifications";
 import AffecterFormateur from "./Composants/AffecterFormateur";
+import GestionFiliere from "./Composants/GestionFiliere";
+import AjouterModule from "./Composants/AjouterModule";
 export default function App(){
    
     
@@ -24,6 +26,8 @@ export default function App(){
                 <Route path="/notification" element={<Notification />}></Route>
                 <Route path="/ShowNotifications" element={<ShowNotification />}></Route>
                 <Route path="/AffecterFormateur/:id" element={<AffecterFormateur />}></Route>
+                <Route path="/GestionFiliere" element={<GestionFiliere />}></Route>
+                <Route path="/GestionFiliere/:id" element={<AjouterModule />}></Route>
             </Routes>  
         </BrowserRouter>
        

@@ -5,10 +5,16 @@ import axios from "axios";
 export default function Groupes(){
     const navigate = useNavigate()
     const [filiere,setFiliere] = useState('')
+    const [fil,setFil]=useState([])
     const [groupes,setGroupes] = useState([])
     const [grp,setGrp] = useState(false)
     const [info,setInfo] = useState({
     _id:'',filiere:''
+    })
+    useEffect(()=>{
+        axios.get('http://localhost:8080/filiere')
+        .then(res=>setFil(res.data))
+        .catch(err=>console.log(err))
     })
     useEffect(()=>{
         axios.get(`http://localhost:8080/groupes/${filiere}`)
@@ -34,6 +40,7 @@ export default function Groupes(){
                 <hr></hr>
                 <Link to={'/login'}><button type='button' style={{backgroundColor:'transparent',border:'none'}} className="btns"><img src="http://localhost:3000/home.png" alt="home"></img><span>Teachers</span></button></Link>
                 <button type='button' className="btns" ><img src="http://localhost:3000/graduate.png" alt="home"></img><span>Groupes</span></button>
+                <Link to={'/GestionFiliere'}><button type='button' className='btns' style={{backgroundColor:'transparent',border:'none'}}><img src="http://localhost:3001/book.png" alt="book"></img><span>Filieres</span></button></Link>
             </nav>
             <div className="split">
             <header>
@@ -41,14 +48,14 @@ export default function Groupes(){
                     <button type='button' className='btnb'>Log out</button>
                 </header>
                 <section>
+                    <br></br>
+                    <h1 style={{color:'#0AD1C8'}}>Gestion Groupe</h1>
+                    <br></br>
                     {!grp?<><div className="filter">
                         <select id="grp" className="form-select" onClick={(e)=>setFiliere(e.target.value)}>
                             <option value={''}>Choisisser votre filiere</option>
-                            <option>developpement web full stack</option>
-                            <option>developpement digital</option>
-                            <option>application mobile</option>
-                            <option>cyber security</option>
-                            <option>infrastructure digital</option>
+                            {fil==null?''
+                            :fil.map(e=><option>{e.filiere}</option>)}
                         </select>
                     </div>                    
                     <div className="filter">
