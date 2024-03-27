@@ -18,6 +18,15 @@ export default function ShowNotification(){
                 <Link to={'/GestionFiliere'}><button type='button' className='btns' style={{backgroundColor:'transparent',border:'none'}}><img src="http://localhost:3000/book.png" alt="book"></img><span>Filieres</span></button></Link>
         </nav>
         <div className='split'>
+                <header>
+                    <div>
+                        <button type='button' className='btnb'>Export CSV</button>
+                    </div>
+                    <div>
+                    <Link to={'/ShowNotifications'}><img style={{width:'30px'}} src='http://localhost:3000/bell.png'></img></Link>
+                    <Link to={'/'}><button type='button' className='btnb'>Log out</button></Link>
+                    </div>
+                </header>
                 <section>
                     <h1 style={{color:'#152259'}}>Notification</h1>
                     <div className='notif'>

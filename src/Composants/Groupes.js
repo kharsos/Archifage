@@ -45,7 +45,7 @@ export default function Groupes(){
             <div className="split">
             <header>
                     <button type='button' style={{marginLeft:'10px'}} onClick={()=>setGrp(true)} className='btnt'>Add Groupe</button>
-                    <button type='button' className='btnb'>Log out</button>
+                    <Link to={'/'}><button type='button' className='btnb'>Log out</button></Link>
                 </header>
                 <section>
                     <br></br>

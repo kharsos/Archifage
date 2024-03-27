@@ -60,7 +60,7 @@ export default function Modules(){
             <div className="split">
                 <header>
                     <button type='button' style={{marginLeft:'10px'}} onClick={()=>{setModule(!module);filter()}} className='btnt'>Add Module</button>
-                    <button type='button' className='btnb'>Log out</button>
+                    <Link to={'/'}><button type='button' className='btnb'>Log out</button></Link>
                 </header>
                 <section>
                     <h1 style={{color:'#0AD1C8'}}>Groupe {grp._id}</h1>

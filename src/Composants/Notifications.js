@@ -39,7 +39,7 @@ export default function Notifications(){
                     <div>
                         <button type='button' className='btnt' onClick={()=>setForm(!form)}>Ajouter Notification</button>
                     </div>
-                    <button type='button' className='btnb'>Log out</button>
+                    <Link to={'/'}><button type='button' className='btnb'>Log out</button></Link>
                 </header>
                 <section>
                     {!form?<div className='notif'>

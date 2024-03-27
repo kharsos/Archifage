@@ -69,6 +69,15 @@ export default function AffecterFormateur(){
        <Link to={'/GestionFiliere'}><button type='button' className='btns' style={{backgroundColor:'transparent',border:'none'}}><img src="http://localhost:3001/book.png" alt="book"></img><span>Filieres</span></button></Link>
    </nav>
    <div className="split">
+        <header>
+            <div>
+                <button type='button' className='btnb'>Export CSV</button>
+            </div>
+            <div>
+            <Link to={'/ShowNotifications'}><img style={{width:'30px'}} src='http://localhost:3000/bell.png'></img></Link>
+            <Link to={'/'}><button type='button' className='btnb'>Log out</button></Link>
+            </div>
+        </header>
        <section>
            <form>
                 <label className="form-label">filiere</label>

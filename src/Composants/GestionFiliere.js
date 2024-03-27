@@ -37,7 +37,7 @@ export default function GestionFiliere(){
             </div>
             <div>
             <Link to={'/ShowNotifications'}><img style={{width:'30px'}} src='http://localhost:3000/bell.png'></img></Link>
-            <button type='button' className='btnb'>Log out</button>
+            <Link to={'/'}><button type='button' className='btnb'>Log out</button></Link>
             </div>
         </header>
         <section>
