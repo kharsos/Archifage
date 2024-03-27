@@ -38,9 +38,9 @@ export default function Groupes(){
                 <img src='http://localhost:3000/ofppt.png' alt="logo"></img>
                 <h2 style={{color:'white'}}>NTIC SYBA</h2>
                 <hr></hr>
-                <Link to={'/login'}><button type='button' style={{backgroundColor:'transparent',border:'none'}} className="btns"><img src="http://localhost:3000/home.png" alt="home"></img><span>Teachers</span></button></Link>
+                <Link to={'/GestionFormateur'}><button type='button' style={{backgroundColor:'transparent',border:'none'}} className="btns"><img src="http://localhost:3000/home.png" alt="home"></img><span>Formateur</span></button></Link>
                 <button type='button' className="btns" ><img src="http://localhost:3000/graduate.png" alt="home"></img><span>Groupes</span></button>
-                <Link to={'/GestionFiliere'}><button type='button' className='btns' style={{backgroundColor:'transparent',border:'none'}}><img src="http://localhost:3001/book.png" alt="book"></img><span>Filieres</span></button></Link>
+                <Link to={'/GestionFiliere'}><button type='button' className='btns' style={{backgroundColor:'transparent',border:'none'}}><img src="http://localhost:3000/book.png" alt="book"></img><span>Filieres</span></button></Link>
             </nav>
             <div className="split">
             <header>
@@ -70,11 +70,8 @@ export default function Groupes(){
                         <input type='text' className="form-control" onChange={(e)=>setInfo({...info,_id:e.target.value})}></input>
                         <select onClick={(e)=>setInfo({...info,filiere:e.target.value})} className="form-select">
                             <option value={''}>Choisisser votre filiere</option>
-                            <option>developpement web full stack</option>
-                            <option>developpement digital</option>
-                            <option>application mobile</option>
-                            <option>cyber security</option>
-                            <option>infrastructure digital</option>
+                            {fil==null?''
+                            :fil.map(e=><option>{e.filiere}</option>)}
                         </select>
                         <button type="button" onClick={()=>AjouteGrp()}>Ajouter Groupe</button>
                     </form>

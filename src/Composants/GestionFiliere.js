@@ -25,7 +25,7 @@ export default function GestionFiliere(){
        <img src='http://localhost:3000/ofppt.png' alt="logo"></img>
        <h2 style={{color:'white'}}>NTIC SYBA</h2>
        <hr></hr>
-       <Link to={'/login'}><button type='button' style={{backgroundColor:'transparent',border:'none'}} className="btns"><img src="http://localhost:3000/home.png" alt="home"></img><span>Formateur</span></button></Link>
+       <Link to={'/GestionFormateur'}><button type='button' style={{backgroundColor:'transparent',border:'none'}} className="btns"><img src="http://localhost:3000/home.png" alt="home"></img><span>Formateur</span></button></Link>
        <Link to={'/Admin/Groupes'}><button type='button' className="btns" style={{backgroundColor:'transparent',border:'none'}}><img src="graduate.png" alt="graduate"></img><span>Groupes</span></button></Link>
        <Link to={'/GestionFiliere'}><button type='button' className='btns' ><img src="http://localhost:3000/book.png" alt="book"></img><span>Filieres</span></button></Link>
    </nav>
@@ -46,7 +46,7 @@ export default function GestionFiliere(){
             <br></br>
             {!form?<div className="filter">
                 {filiere!=null?filiere.map((e)=>{
-                    return <button type="button" style={{backgroundColor:'transparent',color:'#152259',margin:'10px'}} onClick={()=>navigate(`/GestionFiliere/${e._id}`)} className="btns">{e.filiere}</button>
+                    return <button type="button" style={{backgroundColor:'transparent',color:'#152259',margin:'10px',padding:'10px 10px'}} onClick={()=>navigate(`/GestionFiliere/${e._id}`)} className="btns">{e.filiere}</button>
                 })
                 :''}
             </div>

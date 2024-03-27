@@ -1,9 +1,9 @@
-import Signup from "./Composants/Signup";
+import Login from './Composants/Login';
 
 import './App.css'
 import {BrowserRouter , Routes , Route} from 'react-router-dom';
 import Groupes from "./Composants/Groupes";
-import Login from "./Composants/Login";
+import GestionFormateur from "./Composants/GestionFormateur";
 import Modules from "./Composants/Modules";
 import ModifierFormateur from "./Composants/ModifierFormateur";
 import Notification from "./Composants/Notifications";
@@ -18,8 +18,8 @@ export default function App(){
        
         <BrowserRouter>
             <Routes>
-                <Route path='/' element={<Signup/>}></Route>
-                <Route path='/login' element={<Login/>}></Route>
+                <Route path='/' element={<Login/>}></Route>
+                <Route path='/GestionFormateur' element={<GestionFormateur/>}></Route>
                 <Route path="/Admin/Groupes" element={<Groupes />}></Route>
                 <Route path="/Admin/Groupe/:id/Modules" element={<Modules />}></Route>
                 <Route path="/Admin/modifier_formateur/:id" element={<ModifierFormateur />}></Route>
