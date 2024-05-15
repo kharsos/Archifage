@@ -1,24 +1,62 @@
 import { useEffect , useState } from "react";
 import { useNavigate ,useParams ,Link} from "react-router-dom";
 import axios from "axios";
-
+import './popup.css'
 export default function AffecterFormateur(){
     const {id} = useParams()
     const [fil,setfil]=useState('')
     const [grp,setGrp]=useState([])
     const [groupe,setGroupe]=useState('')
     const [modules,setModules]=useState([])
+    const [formateur,setFormateur] = useState('')
+    const navigate = useNavigate()
     const [info,setInfo]=useState({
         name:'',
         formateur:id,
-        constroles:[]
+        controles:[
+            {
+                type:'cc',
+                enonce:false,
+                presence:false,
+                copie:false,
+                pv:false,
+                numero_de_controle:1
+            },
+            {
+                type:'cc',
+                enonce:false,
+                presence:false,
+                copie:false,
+                pv:false,
+                numero_de_controle:2
+            },
+            {
+                type:'cc',
+                enonce:false,
+                presence:false,
+                copie:false,
+                pv:false,
+                numero_de_controle:3
+            },
+            {
+                type:'efm',
+                enonce:false,
+                presence:false,
+                copie:false,
+                pv:false,
+                nom_du_correcteur:''
+                ,numero_de_controle: 4 
+            }
+        ]
     })
     const [filiere,setFiliere]=useState([])
     useEffect(()=>{
         axios.get(`http://localhost:8080/filiere`)
         .then(res=>setFiliere(res.data))
         .catch(err=>console.log(err))
-    })
+        axios.get(`http://localhost:8080/formateur/${id}`)
+        .then(res=>setFormateur(res.data.name))
+    },[])
     useEffect(()=>{
         axios.get(`http://localhost:8080/groupe/filiere/${fil}`)
         .then(res=>setGrp(res.data))
@@ -57,7 +95,12 @@ export default function AffecterFormateur(){
             await axios.put(`http://localhost:8080/module/${groupe}`,info)
             .then(()=>console.log('data created !'))
             .catch(err=>console.log(err))
+            document.getElementById('popUp').style.display='block'
+            document.getElementById('bgPopUp').style.opacity=0.2
         }
+    }
+    const ok = () =>{
+        navigate('/GestionFormateur')
     }
     return  <div>
     <nav className="nav">
@@ -68,7 +111,7 @@ export default function AffecterFormateur(){
        <button type='button' className="btns" ><img src="http://localhost:3000/graduate.png" alt="home"></img><span>Groupes</span></button>
        <Link to={'/GestionFiliere'}><button type='button' className='btns' style={{backgroundColor:'transparent',border:'none'}}><img src="http://localhost:3001/book.png" alt="book"></img><span>Filieres</span></button></Link>
    </nav>
-   <div className="split">
+   <div className="split" id="bgPopUp">
         <header>
             <div>
                 <button type='button' className='btnb'>Export CSV</button>
@@ -105,6 +148,15 @@ export default function AffecterFormateur(){
            </form>
        </section>
    </div>
+   <div id='popUp' style={{display:"none"}}>
+        <h1>
+            {formateur} is now affected to {groupe} module {info.name}
+        </h1>
+        <br></br>
+        <button type="button" className="btn btn-outline-primary" onClick={ok}>
+            OK
+        </button>
+    </div>
 </div>
 
 }

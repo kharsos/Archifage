@@ -18,6 +18,7 @@ export default function GestionFiliere(){
         axios.post('http://localhost:8080/post/filiere',info)
         .then(res=>console.log(res.data))
         .catch(err=>console.log(err))
+        setForm(false)
     }
     return(
         <div>
@@ -46,7 +47,7 @@ export default function GestionFiliere(){
             <br></br>
             {!form?<div className="filter">
                 {filiere!=null?filiere.map((e)=>{
-                    return <button type="button" style={{backgroundColor:'transparent',color:'#152259',margin:'10px',padding:'10px 10px'}} onClick={()=>navigate(`/GestionFiliere/${e._id}`)} className="btns">{e.filiere}</button>
+                    return <button type="button" style={{backgroundColor:'transparent',color:'#152259',margin:'10px',padding:'10px 10px',height:'auto'}} onClick={()=>navigate(`/GestionFiliere/${e._id}`)} className="btns">{e.filiere}</button>
                 })
                 :''}
             </div>

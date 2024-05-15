@@ -1,128 +1,178 @@
-import { useParams , Link} from "react-router-dom";
-import { useState , useEffect} from "react";
+import React, { useState, useEffect } from "react";
+import { useParams, Link } from "react-router-dom";
 import axios from "axios";
-export default function Modules(){
-    const {id}=useParams()
-    const [grp,setGrp]=useState({})
-    const [module,setModule]=useState(false)
-    const [filiere,setFiliere]=useState({})
-    const [formateur,setFormateur] = useState([])
-    const [info,setInfo]=useState({
-        name:"",
-        formateur:0,
-        controles:[]
-    })
-    const [names,setNames]=useState([])
 
-    useEffect(()=>{
-    axios.get(`http://localhost:8080/groupe/${id}`)
-    .then(res=>setGrp(res.data))
-    .catch(err=>console.log(err))
-    })
+export default function Modules() {
+    const { id } = useParams();
+    const [grp, setGrp] = useState({});
+    const [module, setModule] = useState(false);
+    const [filiere, setFiliere] = useState({});
+    const [formateur, setFormateur] = useState([]);
+    const [fomateurs,setFormateurs]=useState([])
+    const [info, setInfo] = useState({
+        name: "",
+        formateur: 0,
+        controles: [
+            { type: 'cc', enonce: false, presence: false, copie: false, pv: false, numero_de_controle: 1 },
+            { type: 'cc', enonce: false, presence: false, copie: false, pv: false, numero_de_controle: 2 },
+            { type: 'cc', enonce: false, presence: false, copie: false, pv: false, numero_de_controle: 3 },
+            { type: 'efm', enonce: false, presence: false, copie: false, pv: false, nom_du_correcteur: '',numero_de_controle: 4 }
+        ]
+    });
+    const [names, setNames] = useState([]);
 
-    useEffect(()=>{
-        axios.get(`http://localhost:8080/filiere/${grp.filiere}`)
-        .then(res=>setFiliere(res.data))
+    useEffect(() => {
+        axios.get(`http://localhost:8080/groupe/${id}`)
+            .then(res => setGrp(res.data))
+            .catch(err => console.log(err));
+        axios.get(`http://localhost:8080/groupe/${id}/formateurs`)
+        .then(res=>setFormateurs(res.data))
         .catch(err=>console.log(err))
-    })
+    }, [id]);
 
-    useEffect(()=>{
+    useEffect(() => {
+        if (grp.filiere) {
+            axios.get(`http://localhost:8080/filiere/${grp.filiere}`)
+                .then(res => setFiliere(res.data))
+                .catch(err => console.log(err));
+        }
+    }, [grp.filiere]);
+
+    useEffect(() => {
         axios.get('http://localhost:8080/formateur')
-        .then(res=>setFormateur(res.data))
-        .catch(err=>console.log(err))
-    },[])
+            .then(res => setFormateur(res.data))
+            .catch(err => console.log(err));
+    }, []);
 
-    const filter = () =>{
-        const filterNames = grp.Modules.map(obj =>obj.name)
-        setNames(filiere.modules.filter(obj => !filterNames.includes(obj.name)))
-    }
+    useEffect(() => {
+        const filterNames = grp.Modules ? grp.Modules.map(obj => obj.name) : [];
+        setNames(filiere.modules ? filiere.modules.filter(obj => !filterNames.includes(obj.name)) : []);
+    }, [grp.Modules, filiere.modules]);
 
-    const addModule=async()=>{
-        if(info.formateur>0&&info.name==''){
-            alert('verifier les information !!')
+    const addModule = async () => {
+        if (info.formateur > 0 && info.name === '') {
+            alert('Veuillez vérifier les informations !!');
+        } else {
+            try {
+                await axios.put(`http://localhost:8080/module/${id}`, info);
+                console.log('Données créées !');
+                setModule(!module)
+            } catch (err) {
+                console.log(err);
+            }
         }
-        else{
-            await axios.put(`http://localhost:8080/module/${id}`,info)
-            .then(()=>console.log('data created !'))
-            .catch(err=>console.log(err))
-        }
-    }
-    return(
+    };
+
+    return (
         <div>
-             <nav className="nav">
-                <img src='http://localhost:3000/ofppt.png' alt="logo"></img>
-                <h2 style={{color:'white'}}>NTIC SYBA</h2>
-                <hr></hr>
-                <Link to={'/GestionFormateur'}><button type='button' style={{backgroundColor:'transparent',border:'none'}} className="btns"><img src="http://localhost:3000/home.png" alt="home"></img><span>Formateur</span></button></Link>
-                <button type='button' className="btns" ><img src="http://localhost:3000/graduate.png" alt="home"></img><span>Groupes</span></button>
-                <Link to={'/GestionFiliere'}><button type='button' className='btns' style={{backgroundColor:'transparent',border:'none'}}><img src="http://localhost:3000/book.png" alt="book"></img><span>Filieres</span></button></Link>
+            <nav className="nav">
+                <img src='http://localhost:3000/ofppt.png' alt="logo" />
+                <h2 style={{ color: 'white' }}>NTIC SYBA</h2>
+                <hr />
+                <Link to={'/GestionFormateur'}>
+                    <button type='button' style={{ backgroundColor: 'transparent', border: 'none' }} className="btns">
+                        <img src="http://localhost:3000/home.png" alt="home" />
+                        <span>Formateur</span>
+                    </button>
+                </Link>
+                <button type='button' className="btns" >
+                    <img src="http://localhost:3000/graduate.png" alt="home" />
+                    <span>Groupes</span>
+                </button>
+                <Link to={'/GestionFiliere'}>
+                    <button type='button' className='btns' style={{ backgroundColor: 'transparent', border: 'none' }}>
+                        <img src="http://localhost:3000/book.png" alt="book" />
+                        <span>Filieres</span>
+                    </button>
+                </Link>
             </nav>
             <div className="split">
                 <header>
-                    <button type='button' style={{marginLeft:'10px'}} onClick={()=>{setModule(!module);filter()}} className='btnt'>Add Module</button>
-                    <Link to={'/'}><button type='button' className='btnb'>Log out</button></Link>
+                    <button type='button' style={{ marginLeft: '10px' }} onClick={() => { setModule(!module); }} className='btnt'>Add Module</button>
+                    <Link to={'/'}>
+                        <button type='button' className='btnb'>Log out</button>
+                    </Link>
                 </header>
                 <section>
-                    <h1 style={{color:'#0AD1C8'}}>Groupe {grp._id}</h1>
-                    {!module?<table style={{marginTop:'20px'}} className="table table-striped">
-                        <thead>
-                        <tr>
-                            <th colSpan={2}></th>
-                            <th colSpan={4}>Controle N1</th>
-                            <th colSpan={4}>Controle N2</th>
-                            <th colSpan={4}>Controle N3</th>
-                            <th>EFM</th>
-                            <th>PV</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <th colSpan={2}>Module</th>
-                            <th>enonce</th>
-                            <th>presence</th>
-                            <th>copie</th>
-                            <th>PV</th>
-                            <th>enonce</th>
-                            <th>presence</th>
-                            <th>copie</th>
-                            <th>PV</th>
-                            <th>enonce</th>
-                            <th>presence</th>
-                            <th>copie</th>
-                            <th>PV</th>
-                            <th colSpan={3}></th>
-                        </tr>
-                        {grp.Modules==null?'':grp.Modules.map((e)=>{return <tr>
-                            <td colSpan={2}><h6>{e.name}</h6></td>
-                            {e.controles==null?'':e.controles.map((e)=>{
-                                return <>
-                                    <td>{!e.status.enonce?<input className="form-check-input" type="checkbox"  disabled></input>:<input type="checkbox" checked disabled></input>}</td>
-                                    <td>{!e.status.presence?<input  className="form-check-input" type="checkbox" disabled></input>:<input type="checkbox" checked disabled></input>}</td>
-                                    <td>{!e.status.copie?<input  className="form-check-input" type="checkbox" disabled></input>:<input type="checkbox" checked disabled></input>}</td>
-                                    <td>{!e.status.pv?<input  className="form-check-input" type="checkbox" disabled></input>:<input type="checkbox" checked disabled></input>}</td>
-                                </>
-                            })}
-                        </tr>})}
-                        </tbody>
-                    </table>
-                    :<form>
-                        <label className="form-label">name</label>
-                        <select onClick={(e)=>setInfo({...info,name:e.target.value})}>
-                            <option value={''} selected disabled>Choisisser un modules</option>
-                            {names.map((e)=><option value={e.name}>
-                                {e.name}
-                            </option>)}
-                        </select>
-                        <select onClick={(e)=>setInfo({...info,formateur:e.target.value})}>
-                            <option value={0} selected disabled>Choisisser le formateur</option>
-                            {formateur.map(e=><option value={e._id}>{e.name}</option>)}
-                        </select>
-                        <button type="button" onClick={()=>addModule()}>Ajouter Module</button>
-                    </form>
-                    }
-                    
+                    <h1 style={{ color: '#0AD1C8' }}>Groupe {grp._id}</h1>
+                    {!module ? (
+                        <table style={{ marginTop: '20px' }} className="table table-striped table-responsive">
+                            <thead>
+                                <tr>
+                                    <th colSpan={2}></th>
+                                    <th colSpan={4}>Controle N1</th>
+                                    <th colSpan={4}>Controle N2</th>
+                                    <th colSpan={4}>Controle N3</th>
+                                    <th>EFM</th>
+                                    <th>PV</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th>Formateur</th>
+                                    <th>Module</th>
+                                    <th>enonce</th>
+                                    <th>presence</th>
+                                    <th>copie</th>
+                                    <th>PV</th>
+                                    <th>enonce</th>
+                                    <th>presence</th>
+                                    <th>copie</th>
+                                    <th>PV</th>
+                                    <th>enonce</th>
+                                    <th>presence</th>
+                                    <th>copie</th>
+                                    <th>PV</th>
+                                    <th colSpan={3}></th>
+                                </tr>
+                                {grp.Modules ? grp.Modules.map((e, index) => (
+                                    <tr key={index}>
+                                        <td>{fomateurs[index]}</td>
+                                        <td><h6>{e.name}</h6></td>
+                                        {e.controles ? e.controles.map((ctrl, ctrlIndex) =>{ 
+                                            if(ctrl.type==='cc'){
+                                                return (
+                                                    <React.Fragment key={ctrlIndex}>
+                                                        <td>{!ctrl.enonce ? <input  type="checkbox" disabled /> : <input type="checkbox" checked disabled />}</td>
+                                                        <td>{!ctrl.presence ? <input  type="checkbox" disabled /> : <input type="checkbox" checked disabled />}</td>
+                                                        <td>{!ctrl.copie ? <input  type="checkbox" disabled /> : <input type="checkbox" checked disabled />}</td>
+                                                        <td>{!ctrl.pv ? <input  type="checkbox" disabled /> : <input type="checkbox" checked disabled />}</td>
+                                                    </React.Fragment>
+                                                )
+                                            }
+                                            else{
+                                                return (
+                                                    <React.Fragment key={ctrlIndex}>
+                                                        <td>{!ctrl.enonce ? <input  type="checkbox" disabled /> : <input type="checkbox" checked disabled />}</td>
+                                                        <td>{!ctrl.pv ? <input  type="checkbox" disabled /> : <input type="checkbox" checked disabled />}</td>
+                                                    </React.Fragment>
+                                                )
+                                            }
+                                            }) : null}
+                                    </tr>
+                                )) : null}
+                            </tbody>
+                        </table>
+                    ) : (
+                        <form>
+                            <label className="form-label">name</label>
+                            <select onChange={(e) => setInfo({ ...info, name: e.target.value })}>
+                                <option value={''} disabled>Choisisser un module</option>
+                                {names.map((e, index) => (
+                                    <option key={index} value={e.name}>{e.name}</option>
+                                ))}
+                            </select>
+                            <select onChange={(e) => setInfo({ ...info, formateur: e.target.value })}>
+                                <option value={0} disabled>Choisisser le formateur</option>
+                                {formateur.map((e, index) => (
+                                    <option key={index} value={e._id}>{e.name}</option>
+                                ))}
+                            </select>
+                            <button type="button" onClick={addModule}>Ajouter Module</button>
+                        </form>
+                    )}
                 </section>
             </div>
         </div>
-    )
+    );
 }

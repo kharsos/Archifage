@@ -20,7 +20,7 @@ export default function ModifierFormateur(){
         axios.put(`http://localhost:8080/update_formateur/${id}`,formateur)
         .then(res=>console.log(res))
         .catch(err=>console.log(err))
-        navigate('/login')
+        navigate('/GestionFormateur')
     }
     return <div>
          <nav className="nav">

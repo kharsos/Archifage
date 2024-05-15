@@ -41,7 +41,7 @@ export default function Login() {
         if (e.type === "admin") {
           navigate("/GestionFormateur");
         } else if (e.type === "formateur") {
-          alert("formateur !!");
+          navigate(`/Formateur/${e._id}`)
         } else {
           navigate("/notification");
         }
