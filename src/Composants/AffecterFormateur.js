@@ -16,6 +16,7 @@ export default function AffecterFormateur(){
         controles:[
             {
                 type:'cc',
+                status:false,
                 enonce:false,
                 presence:false,
                 copie:false,
@@ -25,6 +26,7 @@ export default function AffecterFormateur(){
             {
                 type:'cc',
                 enonce:false,
+                status:false,
                 presence:false,
                 copie:false,
                 pv:false,
@@ -33,6 +35,7 @@ export default function AffecterFormateur(){
             {
                 type:'cc',
                 enonce:false,
+                status:false,
                 presence:false,
                 copie:false,
                 pv:false,
@@ -41,6 +44,7 @@ export default function AffecterFormateur(){
             {
                 type:'efm',
                 enonce:false,
+                status:false,
                 presence:false,
                 copie:false,
                 pv:false,
@@ -50,6 +54,7 @@ export default function AffecterFormateur(){
         ]
     })
     const [filiere,setFiliere]=useState([])
+    
     useEffect(()=>{
         axios.get(`http://localhost:8080/filiere`)
         .then(res=>setFiliere(res.data))
@@ -110,6 +115,8 @@ export default function AffecterFormateur(){
        <Link to={'/GestionFormateur'}><button type='button' style={{backgroundColor:'transparent',border:'none'}} className="btns"><img src="http://localhost:3000/home.png" alt="home"></img><span>Formateur</span></button></Link>
        <button type='button' className="btns" ><img src="http://localhost:3000/graduate.png" alt="home"></img><span>Groupes</span></button>
        <Link to={'/GestionFiliere'}><button type='button' className='btns' style={{backgroundColor:'transparent',border:'none'}}><img src="http://localhost:3001/book.png" alt="book"></img><span>Filieres</span></button></Link>
+       <Link to={'/statistique'}><button type='button' className='btns' style={{backgroundColor:'transparent',border:'none'}}><img src="http://localhost:3001/book.png" alt="book"></img><span>Statistique</span></button></Link>
+   
    </nav>
    <div className="split" id="bgPopUp">
         <header>

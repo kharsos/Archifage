@@ -57,16 +57,15 @@ app.get('/groupe/:id',async(req,res)=>{
 app.get('/groupe/:id/formateurs',async(req,res)=>{
     const id = req.params.id;
     const groupe = await Groupes.findOne({ _id: id }, { _id: 0, 'Modules.formateur': 1 });
+    let formateurs_id = groupe.Modules.forEach(f => f.formateur);
 
-    let formateurs_id = groupe.Modules.map(f => f.formateur);
-
-    let formateurs = await Promise.all(formateurs_id.map(async (f) => {
+    let formateurs = await Promise.all(formateurs_id.forEach(async (f) => {
         return await Users.findOne({ _id: f });
     }));
 
     let formateurs_name = formateurs.map(f => f.name);
 
-    res.status(200).json(formateurs_name);
+    res.status(200).json(formateurs_name)
 })
 
 app.get('/groupe/filiere/:filiere',(req,res)=>{
@@ -178,7 +177,9 @@ app.put('/Modules_formateur/:grp/:module',async(req,res)=>{
                 [`Modules.$.controles.${req.body.numero_de_controle-1}.enonce`]: req.body.enonce , 
                 [`Modules.$.controles.${req.body.numero_de_controle-1}.pv`]: req.body.pv , 
                 [`Modules.$.controles.${req.body.numero_de_controle-1}.presence`]: req.body.presence , 
-                [`Modules.$.controles.${req.body.numero_de_controle-1}.copie`]: req.body.copie} 
+                [`Modules.$.controles.${req.body.numero_de_controle-1}.copie`]: req.body.copie ,
+                [`Modules.$.controles.${req.body.numero_de_controle-1}.status`]:req.body.status
+            }
             })
             .then(result=>res.send(result))
             .catch(err=>res.send(err))
@@ -197,5 +198,12 @@ app.put('/Modules_formateur/:grp/:module',async(req,res)=>{
             .catch(err=>res.send(err))
     }
 })
+
+app.get('/groupes/modules/percentage',async(req,res)=>{
+    await Groupes.aggregate([{$unwind:"$Modules"},{$project:{_id:1,Modules:1,filiere:1}}])
+    .then(mod=>res.status(200).json(mod))
+    .catch(err=>res.status(400).json(err))
+})
+
 
 app.listen(8080,console.log('connexion reussi !!')) 

@@ -19,6 +19,7 @@ export default function Formateur(){
     const [refresh,setRefresh]=useState(false)
     useEffect(()=>{
         console.log(Controles)
+        console.log(teaching)
     },[Controles])
     useEffect(()=>{
         axios.get(`http://localhost:8080/formateur/${id}`)
@@ -38,22 +39,28 @@ export default function Formateur(){
         .catch(err=>console.log(err))
     },[refresh])
     useEffect(()=>{
+        setModules([])
         teaching.map(async (e)=>{
-            if(!modules.includes(e.Modules.name)){
-                setModules(prevElem=>[...prevElem,e.Modules.name])
+            if(e.filiere==ChosenFiliere){
+                if(!modules.includes(e.Modules.name)){
+                    setModules(prevElem=>[...prevElem,e.Modules.name])
+                }
             }
         })
     },[ChosenFiliere])
     useEffect(()=>{
+        setGroupes([])
         teaching.map(e=>{
-            if(!groupes.includes(e._id)){
-                setGroupes([...groupes,e._id])
-                console.log(`teaching ${teaching}`)
-                
+            if(e.Modules.name==ChosenModule&&e.filiere==ChosenFiliere){
+                if(!groupes.includes(e._id)){
+                    setGroupes(prev=>[...prev,e._id])
+                    console.log(`teaching ${teaching}`)
+                    
+                }
             }
         })
         setChosenGroupe(()=>'')
-    },[ChosenModule])
+    },[ChosenModule,ChosenFiliere])
     useEffect(()=>{
         if(ChosenGroupe===''){
             setShowTable(false)
@@ -85,7 +92,11 @@ export default function Formateur(){
       };
       
     const archiver = async (index) =>{
-        const body = Controles[index]
+        let body = {}
+        if(Controles[index].enonce && Controles[index].presence && Controles[index].copie && Controles[index].pv){
+            body = {...Controles[index],status:true}
+        }
+        console.log(body)
         await axios.put(`http://localhost:8080/Modules_formateur/${ChosenGroupe}/${ChosenModule}`,body)
         .then(res=>console.log(res))
         .catch(err=>console.log(err))

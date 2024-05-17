@@ -8,15 +8,15 @@ export default function Modules() {
     const [module, setModule] = useState(false);
     const [filiere, setFiliere] = useState({});
     const [formateur, setFormateur] = useState([]);
-    const [fomateurs,setFormateurs]=useState([])
+    const [fomateurs, setFormateurs] = useState([])
     const [info, setInfo] = useState({
         name: "",
         formateur: 0,
         controles: [
-            { type: 'cc', enonce: false, presence: false, copie: false, pv: false, numero_de_controle: 1 },
-            { type: 'cc', enonce: false, presence: false, copie: false, pv: false, numero_de_controle: 2 },
-            { type: 'cc', enonce: false, presence: false, copie: false, pv: false, numero_de_controle: 3 },
-            { type: 'efm', enonce: false, presence: false, copie: false, pv: false, nom_du_correcteur: '',numero_de_controle: 4 }
+            { type: 'cc', enonce: false, status: false, presence: false, copie: false, pv: false, numero_de_controle: 1 },
+            { type: 'cc', enonce: false, status: false, presence: false, copie: false, pv: false, numero_de_controle: 2 },
+            { type: 'cc', enonce: false, status: false, presence: false, copie: false, pv: false, numero_de_controle: 3 },
+            { type: 'efm', enonce: false, status: false, presence: false, copie: false, pv: false, nom_du_correcteur: '', numero_de_controle: 4 }
         ]
     });
     const [names, setNames] = useState([]);
@@ -26,8 +26,8 @@ export default function Modules() {
             .then(res => setGrp(res.data))
             .catch(err => console.log(err));
         axios.get(`http://localhost:8080/groupe/${id}/formateurs`)
-        .then(res=>setFormateurs(res.data))
-        .catch(err=>console.log(err))
+            .then(res => setFormateurs(res.data))
+            .catch(err => console.log(err))
     }, [id]);
 
     useEffect(() => {
@@ -85,6 +85,8 @@ export default function Modules() {
                         <span>Filieres</span>
                     </button>
                 </Link>
+                <Link to={'/statistique'}><button type='button' className='btns' style={{ backgroundColor: 'transparent', border: 'none' }}><img src="http://localhost:3001/book.png" alt="book"></img><span>Statistique</span></button></Link>
+
             </nav>
             <div className="split">
                 <header>
@@ -129,26 +131,26 @@ export default function Modules() {
                                     <tr key={index}>
                                         <td>{fomateurs[index]}</td>
                                         <td><h6>{e.name}</h6></td>
-                                        {e.controles ? e.controles.map((ctrl, ctrlIndex) =>{ 
-                                            if(ctrl.type==='cc'){
+                                        {e.controles ? e.controles.map((ctrl, ctrlIndex) => {
+                                            if (ctrl.type === 'cc') {
                                                 return (
                                                     <React.Fragment key={ctrlIndex}>
-                                                        <td>{!ctrl.enonce ? <input  type="checkbox" disabled /> : <input type="checkbox" checked disabled />}</td>
-                                                        <td>{!ctrl.presence ? <input  type="checkbox" disabled /> : <input type="checkbox" checked disabled />}</td>
-                                                        <td>{!ctrl.copie ? <input  type="checkbox" disabled /> : <input type="checkbox" checked disabled />}</td>
-                                                        <td>{!ctrl.pv ? <input  type="checkbox" disabled /> : <input type="checkbox" checked disabled />}</td>
+                                                        <td>{!ctrl.enonce ? <input type="checkbox" disabled /> : <input type="checkbox" checked disabled />}</td>
+                                                        <td>{!ctrl.presence ? <input type="checkbox" disabled /> : <input type="checkbox" checked disabled />}</td>
+                                                        <td>{!ctrl.copie ? <input type="checkbox" disabled /> : <input type="checkbox" checked disabled />}</td>
+                                                        <td>{!ctrl.pv ? <input type="checkbox" disabled /> : <input type="checkbox" checked disabled />}</td>
                                                     </React.Fragment>
                                                 )
                                             }
-                                            else{
+                                            else {
                                                 return (
                                                     <React.Fragment key={ctrlIndex}>
-                                                        <td>{!ctrl.enonce ? <input  type="checkbox" disabled /> : <input type="checkbox" checked disabled />}</td>
-                                                        <td>{!ctrl.pv ? <input  type="checkbox" disabled /> : <input type="checkbox" checked disabled />}</td>
+                                                        <td>{!ctrl.enonce ? <input type="checkbox" disabled /> : <input type="checkbox" checked disabled />}</td>
+                                                        <td>{!ctrl.pv ? <input type="checkbox" disabled /> : <input type="checkbox" checked disabled />}</td>
                                                     </React.Fragment>
                                                 )
                                             }
-                                            }) : null}
+                                        }) : null}
                                     </tr>
                                 )) : null}
                             </tbody>

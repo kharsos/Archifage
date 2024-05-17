@@ -12,6 +12,7 @@ import AffecterFormateur from "./Composants/AffecterFormateur";
 import GestionFiliere from "./Composants/GestionFiliere";
 import AjouterModule from "./Composants/AjouterModule";
 import Formateur from './Composants/Formateur';
+import Statistique from './Composants/Statistique';
 export default function App(){
    
     
@@ -30,6 +31,7 @@ export default function App(){
                 <Route path="/GestionFiliere" element={<GestionFiliere />}></Route>
                 <Route path="/GestionFiliere/:id" element={<AjouterModule />}></Route>
                 <Route path='/Formateur/:id' element={<Formateur />}></Route>
+                <Route path='/statistique' element={<Statistique />}></Route>
             </Routes>  
         </BrowserRouter>
        
