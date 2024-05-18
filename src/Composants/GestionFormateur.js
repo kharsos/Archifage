@@ -1,6 +1,7 @@
 import React from 'react'
 import { useEffect,useState } from 'react';
 import { useNavigate , Link} from 'react-router-dom';
+import Menu from './Menu';
 import '../App.css'
 import './Menu.css'
 import axios from 'axios';
@@ -43,16 +44,7 @@ function GestionFormateur(){
     }
     return(
         <div>
-            <nav className="nav">
-                <img src='ofppt.png' alt="logo"></img>
-                <h2 style={{color:'white'}}>NTIC SYBA</h2>
-                <hr></hr>
-                <button type='button' className="btns"><img src="http://localhost:3000/home.png" alt="formateur"></img><span>Formateur</span></button>
-                <Link to={'/Admin/Groupes'}><button type='button' className="btns" style={{backgroundColor:'transparent',border:'none'}}><img src="graduate.png" alt="graduate"></img><span>Groupes</span></button></Link>
-                <Link to={'/GestionFiliere'}><button type='button' className='btns' style={{backgroundColor:'transparent',border:'none'}}><img src="http://localhost:3000/book.png" alt="book"></img><span>Filieres</span></button></Link>
-                <Link to={'/statistique'}><button type='button' className='btns' style={{backgroundColor:'transparent',border:'none'}}><img src="http://localhost:3001/book.png" alt="book"></img><span>Statistique</span></button></Link>
-   
-            </nav>
+            <Menu />
             <div className='split'>
                 <header>
                     <div>

@@ -14,14 +14,22 @@ const ArchivageChart = (props) => {
 
   // Calculate the combined percentage
   useEffect(()=>{
-    teacherExams.map(module=>{
+      let completedCount = 0
+      let totalCount = 0
+      teacherExams.map(module=>{
       module.Modules.controles.map(cntrl=>{
         if(cntrl.status){
-          setTotalCompleted(prev=>prev+1)
+          completedCount+=1
         }
-        setTotal(prev=>prev+1)
+        totalCount+=1
       })
     })
+    if(totalCount==0){
+      totalCount=1
+    }
+    setTotal(totalCount)
+    setTotalCompleted(completedCount)
+    
   },[teacherExams])
 
   const data = {

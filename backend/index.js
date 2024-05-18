@@ -56,16 +56,14 @@ app.get('/groupe/:id',async(req,res)=>{
 
 app.get('/groupe/:id/formateurs',async(req,res)=>{
     const id = req.params.id;
-    const groupe = await Groupes.findOne({ _id: id }, { _id: 0, 'Modules.formateur': 1 });
-    let formateurs_id = groupe.Modules.forEach(f => f.formateur);
+    const groupe = await Groupes.findOne({ _id: id });
+    console.log(groupe);
+    const formateursDistincts = [...new Set(groupe.Modules.map(module => module.formateur))];
+    console.log(formateursDistincts);
+    const formateur_name=await Users.find({_id:{$in:formateursDistincts}},{_id:0,name:1})
+    const result=formateur_name.map(f=>f.name)
 
-    let formateurs = await Promise.all(formateurs_id.forEach(async (f) => {
-        return await Users.findOne({ _id: f });
-    }));
-
-    let formateurs_name = formateurs.map(f => f.name);
-
-    res.status(200).json(formateurs_name)
+    res.status(200).json(result)
 })
 
 app.get('/groupe/filiere/:filiere',(req,res)=>{

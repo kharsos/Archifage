@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
+import Menu from "./Menu";
 import axios from "axios";
 
 export default function Modules() {
@@ -65,29 +66,7 @@ export default function Modules() {
 
     return (
         <div>
-            <nav className="nav">
-                <img src='http://localhost:3000/ofppt.png' alt="logo" />
-                <h2 style={{ color: 'white' }}>NTIC SYBA</h2>
-                <hr />
-                <Link to={'/GestionFormateur'}>
-                    <button type='button' style={{ backgroundColor: 'transparent', border: 'none' }} className="btns">
-                        <img src="http://localhost:3000/home.png" alt="home" />
-                        <span>Formateur</span>
-                    </button>
-                </Link>
-                <button type='button' className="btns" >
-                    <img src="http://localhost:3000/graduate.png" alt="home" />
-                    <span>Groupes</span>
-                </button>
-                <Link to={'/GestionFiliere'}>
-                    <button type='button' className='btns' style={{ backgroundColor: 'transparent', border: 'none' }}>
-                        <img src="http://localhost:3000/book.png" alt="book" />
-                        <span>Filieres</span>
-                    </button>
-                </Link>
-                <Link to={'/statistique'}><button type='button' className='btns' style={{ backgroundColor: 'transparent', border: 'none' }}><img src="http://localhost:3001/book.png" alt="book"></img><span>Statistique</span></button></Link>
-
-            </nav>
+            <Menu />
             <div className="split">
                 <header>
                     <button type='button' style={{ marginLeft: '10px' }} onClick={() => { setModule(!module); }} className='btnt'>Add Module</button>
@@ -95,10 +74,10 @@ export default function Modules() {
                         <button type='button' className='btnb'>Log out</button>
                     </Link>
                 </header>
-                <section>
+                <section style={{display:'flex',flexDirection:'column',alignContent:'center'}}>
                     <h1 style={{ color: '#0AD1C8' }}>Groupe {grp._id}</h1>
                     {!module ? (
-                        <table style={{ marginTop: '20px' }} className="table table-striped table-responsive">
+                        <table style={{ marginTop: '20px',width:'100%' }} className="table table-striped">
                             <thead>
                                 <tr>
                                     <th colSpan={2}></th>

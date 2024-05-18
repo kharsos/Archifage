@@ -2,6 +2,7 @@ import axios from 'axios';
 import {useState , useEffect} from 'react';
 import { useParams } from 'react-router-dom';
 import { Link , useNavigate} from 'react-router-dom';
+import Menu from './Menu';
 import '../App.css';
 export default function ModifierFormateur(){
     const [formateur,setFormateur]=useState({
@@ -23,16 +24,7 @@ export default function ModifierFormateur(){
         navigate('/GestionFormateur')
     }
     return <div>
-         <nav className="nav">
-                <img src='http://localhost:3000/ofppt.png' alt="logo"></img>
-                <h2 style={{color:'white'}}>NTIC SYBA</h2>
-                <hr></hr>
-                <Link to={'/GestionFormateur'}><button type='button' className="btns"><img src="http://localhost:3000/home.png" alt="home"></img><span>Formateur</span></button></Link>
-                <Link to={'/Admin/Groupes'}><button type='button' className="btns" style={{backgroundColor:'transparent',border:'none'}}><img src="http://localhost:3000/graduate.png" alt="home"></img><span>Groupes</span></button></Link>
-                <Link to={'/GestionFiliere'}><button type='button' className='btns' style={{backgroundColor:'transparent',border:'none'}}><img src="http://localhost:3001/book.png" alt="book"></img><span>Filieres</span></button></Link>
-                <Link to={'/statistique'}><button type='button' className='btns' style={{backgroundColor:'transparent',border:'none'}}><img src="http://localhost:3001/book.png" alt="book"></img><span>Statistique</span></button></Link>
-   
-            </nav>
+            <Menu />
             <div className='split'>
             <header>
                 <div>
