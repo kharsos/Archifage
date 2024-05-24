@@ -1,5 +1,6 @@
 import axios from 'axios';
 import {useState,useEffect} from 'react';
+import CopiesChart from './CopiesChart';
 import { Link } from 'react-router-dom';
 export default function Notifications(){
     const [notification,setNotification]=useState([])
@@ -10,6 +11,7 @@ export default function Notifications(){
     const [filieres,setFilieres]=useState([])
     const [modules,setModules]=useState([])
     const [groupes,setGroupes]=useState([])
+    const [data,setData]=useState([])
     const [info , setInfo]=useState({
         formateur:'',
         Module:'',
@@ -23,11 +25,18 @@ export default function Notifications(){
         .catch(err=>console.log(err))
     },[])
 
+
+    useEffect(()=>{
+            axios.get(`http://localhost:8080/notifications/groupe`)
+            .then(res=>setData(res.data))
+            .catch(err=>console.log(err))
+      },[])
+
     useEffect(()=>{
         axios.get('http://localhost:8080/notification')
         .then(res=>setNotification(res.data))
         .catch(err=>console.log(err))
-    },[])
+    },[form])
     useEffect(()=>{
         axios.get(`http://localhost:8080/Modules_formateur/${chosenFormateur}`)
         .then(res=>{
@@ -65,11 +74,11 @@ export default function Notifications(){
             }
         })
     },[info.Module])
-    const Ajouter_Notification=()=>{
-        let text=`Formateur : ${info.formateur} , Module : ${info.Module} , Groupe : ${info.Groupe} , Nombre de copie : ${info.copie}`
-        axios.post('http://localhost:8080/post/notification',{notification:text})
+    const Ajouter_Notification= async()=>{
+        await axios.post('http://localhost:8080/post/notification',info)
         .then(res=>console.log(res))
         .catch(err=>console.log(err))
+        setForm(false)
     }
     return<div>
          <nav className="nav">
@@ -86,9 +95,28 @@ export default function Notifications(){
                 </header>
                 <section>
                     {!form?<div className='notif'>
-                        {notification.map(e=><div style={{backgroundColor:'#61dafb',color:'white',fontWeight:'bold'}}>
-                            {e.notification}
-                        </div>)}
+                        <table className='table table-striped'>
+                            <thead>
+                                <tr>
+                                    <th>formateur</th>
+                                    <th>Module</th>
+                                    <th>Groupe</th>
+                                    <th>Filiere</th>
+                                    <th>Nombre de copie</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {
+                                    notification.map(e=><tr>
+                                        <td>{e.formateur}</td>
+                                        <td>{e.Module}</td>
+                                        <td>{e.Groupe}</td>    
+                                        <td>{e.filiere}</td>
+                                        <td>{e.copie}</td>
+                                    </tr>)
+                                }
+                            </tbody>
+                        </table>
                     </div>
                     :<form>
                         <label className='form-label'>Formateur</label>    
@@ -123,6 +151,7 @@ export default function Notifications(){
                         <input type='number' onChange={(e)=>setInfo({...info,copie:e.target.value})}></input>
                         <button type='button' onClick={()=>Ajouter_Notification()} >Ajouter Notification</button>
                     </form>}
+                    <CopiesChart/>
                 </section>
         </div>
     </div>

@@ -85,7 +85,7 @@ function GestionFormateur(){
                     </div>
                     </>:
                     <>
-                        <form>
+                        <form id='form'>
                             <label className='form-label'>Name</label>
                             <input onChange={(e)=>setTeacher({...teacher,name:e.target.value})} type='text' className='form-control'></input>
                             <label className='form-label'>email</label>

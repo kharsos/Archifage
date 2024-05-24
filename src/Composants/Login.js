@@ -53,9 +53,9 @@ export default function Login() {
     }
   };
   return (
-    <div className="body">   
+    <div className="body" >   
         <div className="form-container sign-in-container">
-          <form action="#" onSubmit={connexion}>
+          <form action="#" onSubmit={connexion} style={{width:'500px'}}>
 		  <img src='ofppt.png' alt="logo"></img>
             <h1>Sign in</h1>
             <span>or use your account</span>

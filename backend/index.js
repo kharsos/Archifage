@@ -105,14 +105,13 @@ app.get('/notification',(req,res)=>{
 })
 
 app.post('/post/notification',async(req,res)=>{
-    const {notification} = req.body
     let id = await Notification.findOne().sort({_id:-1})
     if(id===null){
         id=0
     }
     else{id=id._id}
     console.log(id)
-    const newNotification = new Notification({_id:id+1,notification:notification})
+    const newNotification = new Notification({_id:id+1,...req.body})
     newNotification.save()
     .then(notif=>res.status(200).json(notif))
     .catch(err=>res.status(400).json(err))
@@ -201,6 +200,20 @@ app.get('/groupes/modules/percentage',async(req,res)=>{
     await Groupes.aggregate([{$unwind:"$Modules"},{$project:{_id:1,Modules:1,filiere:1}}])
     .then(mod=>res.status(200).json(mod))
     .catch(err=>res.status(400).json(err))
+})
+
+app.get('/notifications/groupe',async(req,res)=>{
+    await Notification.aggregate([{$match:{}},{$group:{_id:'$Date',totalCopies:{$sum:'$copie'}}}])
+    .then(result=>res.status(200).json(result))
+    .catch(err=>res.send(err))
+})
+
+app.get('/notifications/groupe/:formateur',async(req,res)=>{
+    const formateur = req.params.formateur
+    await Notification.aggregate([{$match:{formateur:formateur}},{$group:{_id:'$Date',totalCopies:{$sum:'$copie'}}}])
+    .then(result=>res.status(200).json(result))
+    .catch(err=>res.send(err))
+        
 })
 
 

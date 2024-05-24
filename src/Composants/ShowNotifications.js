@@ -2,13 +2,29 @@ import axios from 'axios';
 import {useState,useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import Menu from './Menu';
+import CopiesChart from './CopiesChart';
 export default function ShowNotification(){
     const [notification,setNotification]=useState([])
+    // const [formateur,setFormateur]=useState([])
+    // const [chosenFormateur,setChosenFormateur]=useState('')
+    const [Statistique,setStatistique]=useState([])
     useEffect(()=>{
         axios.get('http://localhost:8080/notification')
         .then(res=>setNotification(res.data))
         .catch(err=>console.log(err))
-    })
+
+        // axios.get('http://localhost:8080/formateur')
+        // .then(res=>setFormateur(res.data))
+        // .catch(err=>console.log(err))
+    },[])
+
+//     useEffect(()=>{
+//         axios.get(`http://localhost:8080/notifications/groupe/${chosenFormateur}`)
+//         .then(res=>setStatistique(res.data))
+//         .catch(err=>console.log(err))
+//         console.log(Statistique)
+//   },[chosenFormateur])
+
     return<div>
         <Menu />
         <div className='split'>
@@ -22,13 +38,33 @@ export default function ShowNotification(){
                     </div>
                 </header>
                 <section>
-                    <h1 style={{color:'#152259'}}>Notification</h1>
+                    <h1 style={{color:'#152259'}}>Copies</h1>
                     <div className='notif'>
-                        {notification.map(e=><div style={{backgroundColor:'#61dafb',color:'white',fontWeight:'bold',margin:"10px 20px"}}>
-                            {e.notification}
-                        </div>)}
+                    <table className='table table-striped'>
+                            <thead>
+                                <tr>
+                                    <th>formateur</th>
+                                    <th>Module</th>
+                                    <th>Groupe</th>
+                                    <th>Filiere</th>
+                                    <th>Nombre de copie</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {
+                                    notification.map(e=><tr>
+                                        <td>{e.formateur}</td>
+                                        <td>{e.Module}</td>
+                                        <td>{e.Groupe}</td>    
+                                        <td>{e.filiere}</td>
+                                        <td>{e.copie}</td>
+                                    </tr>)
+                                }
+                            </tbody>
+                        </table>
                     </div>
                 </section>
+                <CopiesChart />
         </div>
     </div>
 }
