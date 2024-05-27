@@ -81,7 +81,7 @@ export default function Formateur(){
         setControles(prevControles => {
           return prevControles.map((control,i) => {
             if (i === id) {
-                if(control.type==='efm'){
+                if(control.type==='efm' && groupe.Modules.type==='R'){
                     return { ...control, [property]: !control[property] , nom_du_correcteur : nomDuCorrecteur };
                 }
                 return { ...control, [property]: !control[property] };
@@ -94,7 +94,10 @@ export default function Formateur(){
     const archiver = async (index) =>{
         let body = {}
         if(Controles[index].enonce && Controles[index].presence && Controles[index].copie && Controles[index].pv){
-            body = {...Controles[index],status:true}
+            body = {...Controles[index],status:true,type:groupe.Modules.type}
+        }
+        else{
+            body= {...Controles[index],type:groupe.Modules.type}
         }
         console.log(body)
         await axios.put(`http://localhost:8080/Modules_formateur/${ChosenGroupe}/${ChosenModule}`,body)
@@ -144,6 +147,8 @@ export default function Formateur(){
                             <th>presence</th>
                             <th>copie</th>
                             <th>PV</th>
+                            {groupe.Modules.type==='R'?<th>PV_de_repport</th>:''}
+                            
                             <th colSpan={10}>Action</th>
                         </tr>
                     </thead>
@@ -153,13 +158,20 @@ export default function Formateur(){
                             <tr>
                                 <td colSpan={2}>{cntrl.type==='cc'?`Controle N ${cntrl.numero_de_controle}`:`EFM`}</td>
                                 <td>{!cntrl.enonce ? <input  type="checkbox" onChange={()=>checkBoxChangeHandle(index,'enonce')}/> 
-                                : <input type="checkbox" checked disabled />}</td>
+                                : <input type="checkbox" checked disabled className="checkbox"/>}</td>
                                 <td>{!cntrl.presence ? <input  type="checkbox" onChange={()=>checkBoxChangeHandle(index,'presence')} /> 
-                                : <input type="checkbox" checked disabled />}</td>
+                                : <input type="checkbox" checked disabled className="checkbox"/>}</td>
                                 <td>{!cntrl.copie ? <input  type="checkbox"  onChange={()=>checkBoxChangeHandle(index,'copie')}/> 
-                                : <input type="checkbox" checked disabled />}</td>
+                                : <input type="checkbox" checked disabled className="checkbox"/>}</td>
                                 <td>{!cntrl.pv ? <input  type="checkbox" onChange={()=>checkBoxChangeHandle(index,'pv')} /> 
-                                : <input type="checkbox" checked disabled />}</td>
+                                : <input type="checkbox" checked disabled className="checkbox"/>}</td>
+                                <td>
+                                    {groupe.Modules.type==='R' && cntrl.type==='efm'?
+                                    !cntrl.PV_de_repport ? <input  type="checkbox" onChange={()=>checkBoxChangeHandle(index,'PV_de_repport')} /> 
+                                    : <input type="checkbox" checked disabled className="checkbox"/>
+                                    :''
+                                    }
+                                </td>
                                 <td>
                                     {cntrl.type==='cc'?
                                         cntrl.enonce && cntrl.presence && cntrl.copie && cntrl.pv ?
@@ -169,17 +181,20 @@ export default function Formateur(){
                                         :
                                         <>
                                             {
-                                            cntrl.enonce && cntrl.presence && cntrl.copie && cntrl.pv && cntrl.nom_du_correcteur!='' ?<>
-                                                <input type="text" disabled className="form-control" placeholder="nom du correcteur" onChange={(e)=>setNomDuCorrecteur(e.target.value)} required></input>
+                                            cntrl.enonce && cntrl.presence && cntrl.copie && cntrl.pv ?<>
+                                                {groupe.Modules.type==='R'?<input type="text" disabled className="form-control" placeholder="nom du correcteur" onChange={(e)=>setNomDuCorrecteur(e.target.value)} required></input> : ''}
                                                 <button type="button" disabled className="btn btn-outline-success">Archiver</button>
                                                 </>
                                                 :<>
+                                                {groupe.Modules.type==='R'?
                                                 <input type="text" className="form-control" placeholder="nom du correcteur" onChange={(e)=>{
                                                     setNomDuCorrecteur(e.target.value)
                                                     checkBoxChangeHandle(index)
                                                     }} 
                                                     value={nomDuCorrecteur!=''?nomDuCorrecteur:''}
                                                     required></input>
+                                                    :''
+                                                }
                                                 <button type="button" className="btn btn-outline-success" onClick={()=>archiver(index)}>Archiver</button>
                                                 </>
                                             }

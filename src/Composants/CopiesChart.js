@@ -23,7 +23,7 @@ const CopiesChart = () => {
     const [August,setAugust]=useState(0)
     const [statistique,setStatitstique]=useState([])
     const [formateur,setFormateur]=useState([])
-    const [chosenFormateur,setChosenFormateur]=useState('Youssef')
+    const [chosenFormateur,setChosenFormateur]=useState('')
 
     useEffect(()=>{
         axios.get('http://localhost:8080/formateur')
@@ -39,6 +39,18 @@ const CopiesChart = () => {
     },[chosenFormateur])
 
     useEffect(()=>{
+        setApril(0)
+        setMarch(0)
+        setAugust(0)
+        setSeptember(0)
+        setOctober(0)
+        setJuly(0)
+        setJune(0)
+        setMay(0)
+        setFebruary(0)
+        setJanuary(0)
+        setDecember(0)
+        setNovember(0)
         if (statistique.length > 0) {
             statistique.forEach(month => {
         switch (month._id) {
@@ -82,20 +94,6 @@ const CopiesChart = () => {
               break;
       }
       })}
-      else{
-        setApril(0)
-        setMarch(0)
-        setAugust(0)
-        setSeptember(0)
-        setOctober(0)
-        setJuly(0)
-        setJune(0)
-        setMay(0)
-        setFebruary(0)
-        setJanuary(0)
-        setDecember(0)
-        setNovember(0)
-      }
     },[statistique])
 
     const data = {

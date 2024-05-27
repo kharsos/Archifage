@@ -40,12 +40,18 @@ app.get('/groupes/:f',(req,res)=>{
     .then(groupes=>res.status(200).json(groupes))
     .catch(err=>res.status(400).json(err))
 })
-app.post('/groupe/post',(req,res)=>{
+app.post('/groupe/post',async(req,res)=>{
     const {_id,filiere} = req.body
-    const newGrp = new Groupes({_id,filiere,Modules:[]})
-    newGrp.save()
-    .then(groupe=>res.status(200).json(groupe))
-    .catch(err=>res.status(400).json(err))
+    const existed = await Groupes.findOne({_id:_id})
+    if(!existed){
+        const newGrp = new Groupes({_id,filiere,Modules:[]})
+        newGrp.save()
+        .then(groupe=>res.status(200).json(groupe))
+        .catch(err=>res.status(400).json(err))
+    }
+    else{
+        return res.status(400).json('group existed !')
+    }
 })
 app.get('/groupe/:id',async(req,res)=>{
     const id =req.params.id
@@ -57,12 +63,12 @@ app.get('/groupe/:id',async(req,res)=>{
 app.get('/groupe/:id/formateurs',async(req,res)=>{
     const id = req.params.id;
     const groupe = await Groupes.findOne({ _id: id });
-    console.log(groupe);
-    const formateursDistincts = [...new Set(groupe.Modules.map(module => module.formateur))];
-    console.log(formateursDistincts);
-    const formateur_name=await Users.find({_id:{$in:formateursDistincts}},{_id:0,name:1})
-    const result=formateur_name.map(f=>f.name)
-
+    const formateursDistincts = groupe.Modules.map(module => module.formateur);
+    let result = []
+    for(count = 0 ; count < formateursDistincts.length ; count ++){
+        const user = await Users.findOne({_id:formateursDistincts[count]})
+        result.push(user.name)
+    }
     res.status(200).json(result)
 })
 
@@ -77,9 +83,7 @@ app.get('/groupe/filiere/:filiere',(req,res)=>{
 app.put('/module/:id',async (req,res)=>{
     const data = req.body
     if(data.name!=''&&data.formateur>0){
-    const result=await Filiere.findOne({modules:{$elemMatch:{name:data.name}}},{'modules.$':1})
-    const {id,type}=result.modules[0]
-    Groupes.updateOne({ _id:req.params.id },{$push:{Modules:{...data,id:id,type:type}}})
+    Groupes.updateOne({ _id:req.params.id },{$push:{Modules:{...data}}})
     .then(grp=>res.json(grp))
     .catch(err=>res.json({err:'not'}))
     }
@@ -155,7 +159,7 @@ app.get('/get/:id',(req,res)=>{
 app.put('/post/module/:id',(req,res)=>{
     const id=req.params.id
     const data = req.body
-    Filiere.updateOne({_id:id},{$push:{modules:{...data}}})
+    Filiere.updateOne({_id:id},{$push:{modules:req.body}})
     .then(fil=>res.status(200).json(fil))
     .catch(err=>res.status(400).json(err))
 })
@@ -181,15 +185,32 @@ app.put('/Modules_formateur/:grp/:module',async(req,res)=>{
             .then(result=>res.send(result))
             .catch(err=>res.send(err))
     }
-    else{
+    else if(req.body.numero_de_controle===4 && req.body.type==='R'){
         await Groupes.updateOne(
             { _id: req.params.grp, "Modules.name": req.params.module },
             { $set: { 
                 [`Modules.$.controles.${req.body.numero_de_controle-1}.enonce`]: req.body.enonce , 
                 [`Modules.$.controles.${req.body.numero_de_controle-1}.pv`]: req.body.pv , 
+                [`Modules.$.controles.${req.body.numero_de_controle-1}.PV_de_repport`]: req.body.PV_de_repport , 
                 [`Modules.$.controles.${req.body.numero_de_controle-1}.presence`]: req.body.presence , 
                 [`Modules.$.controles.${req.body.numero_de_controle-1}.copie`]: req.body.copie , 
-                [`Modules.$.controles.${req.body.numero_de_controle-1}.nom_du_correcteur`]:req.body.nom_du_correcteur } 
+                [`Modules.$.controles.${req.body.numero_de_controle-1}.nom_du_correcteur`]:req.body.nom_du_correcteur,
+                [`Modules.$.controles.${req.body.numero_de_controle-1}.status`]:req.body.status 
+            } 
+            })
+            .then(result=>res.send(result))
+            .catch(err=>res.send(err))
+    }
+    else if(req.body.numero_de_controle===4 && req.body.type==='L'){
+        await Groupes.updateOne(
+            { _id: req.params.grp, "Modules.name": req.params.module },
+            { $set: { 
+                [`Modules.$.controles.${req.body.numero_de_controle-1}.enonce`]: req.body.enonce , 
+                [`Modules.$.controles.${req.body.numero_de_controle-1}.pv`]: req.body.pv ,
+                [`Modules.$.controles.${req.body.numero_de_controle-1}.presence`]: req.body.presence , 
+                [`Modules.$.controles.${req.body.numero_de_controle-1}.copie`]: req.body.copie ,
+                [`Modules.$.controles.${req.body.numero_de_controle-1}.status`]:req.body.status 
+            } 
             })
             .then(result=>res.send(result))
             .catch(err=>res.send(err))

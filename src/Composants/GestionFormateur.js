@@ -76,9 +76,9 @@ function GestionFormateur(){
                                 <td>{e.name}</td>
                                 <td>{e.email}</td>
                                 <td>{e.gendre}</td>
-                                <td><button className='btn btn-success' onClick={()=>navigate(`/Admin/modifier_formateur/${e._id}`)}>Modifier</button></td>
-                                <td><button className='btn btn-danger' onClick={()=>deleteTeacher(e._id)}>Supprimer</button></td>
-                                <td><button className='btn btn-light' onClick={()=>navigate(`/AffecterFormateur/${e._id}`)}>+</button></td>
+                                <td><button className='btn btn-outline-success' onClick={()=>navigate(`/Admin/modifier_formateur/${e._id}`)}>Modifier</button></td>
+                                <td><button className='btn btn-outline-danger' onClick={()=>deleteTeacher(e._id)}>Supprimer</button></td>
+                                <td><button className='btn btn-dark' onClick={()=>navigate(`/AffecterFormateur/${e._id}`)}>+</button></td>
                             </tr>)}
                             </tbody>
                         </table>

@@ -13,6 +13,7 @@ export default function AffecterFormateur(){
     const navigate = useNavigate()
     const [info,setInfo]=useState({
         name:'',
+        type:'',
         formateur:id,
         controles:[
             {
@@ -48,8 +49,7 @@ export default function AffecterFormateur(){
                 status:false,
                 presence:false,
                 copie:false,
-                pv:false,
-                nom_du_correcteur:''
+                pv:false
                 ,numero_de_controle: 4 
             }
         ]
@@ -73,7 +73,6 @@ export default function AffecterFormateur(){
         if(fil!=''&&groupe==''){
         const filter = filiere.filter(e=>e.filiere==fil)
         setModules(filter[0].modules)
-        console.log(modules)
         }
         else if(fil!=''&&groupe!=''){
             const filterNames = grp.filter(e=>e._id==groupe)[0].Modules
@@ -92,21 +91,22 @@ export default function AffecterFormateur(){
                 ))
         }
     },[fil,groupe])
-
+    console.log(modules)
     const addModule=async()=>{
         if(info.formateur>0&&info.name==''){
             alert('verifier les information !!')
         }
         else{
-            await axios.put(`http://localhost:8080/module/${groupe}`,info)
+            let data = info
+            if(info.type==='R'){
+                data.controles[3]= {...data.controles[3],nom_du_correcteur:'',PV_de_repport:false}
+            }
+            console.log(data)
+            await axios.put(`http://localhost:8080/module/${groupe}`,data)
             .then(()=>console.log('data created !'))
             .catch(err=>console.log(err))
-            document.getElementById('popUp').style.display='block'
-            document.getElementById('bgPopUp').style.opacity=0.2
-        }
+            navigate('/GestionFormateur')
     }
-    const ok = () =>{
-        navigate('/GestionFormateur')
     }
     return  <div>
     <Menu />
@@ -137,9 +137,12 @@ export default function AffecterFormateur(){
                         </option>)}
                </select>
                <label className="form-label">name</label>
-               <select onClick={(e)=>setInfo({...info,name:e.target.value})}>
+               <select onClick={(e)=>{
+                if(e.target.value){
+                    const values = JSON.parse(e.target.value)
+                    setInfo({...info,name:values.name,type:values.type})}}}>
                     <option value={''}>Choisisser un module</option>
-                   {modules==null?'':modules.map((e)=><option value={e.name}>
+                   {modules==null?'':modules.map((e)=><option value={JSON.stringify({name:e.name,type:e.type})}>
                        {e.name}
                    </option>)}
                </select>
@@ -147,15 +150,6 @@ export default function AffecterFormateur(){
            </form>
        </section>
    </div>
-   <div id='popUp' style={{display:"none"}}>
-        <h1>
-            {formateur} is now affected to {groupe} module {info.name}
-        </h1>
-        <br></br>
-        <button type="button" className="btn btn-outline-primary" onClick={ok}>
-            OK
-        </button>
-    </div>
 </div>
 
 }

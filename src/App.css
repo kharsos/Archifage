@@ -10,6 +10,30 @@ form {
 }
 
 
+.checkbox:disabled {
+  appearance: none; /* Remove default styling */
+  width: 16px;
+  height: 16px;
+  background-color: green; /* Green background for disabled checkbox */
+  border: 2px solid green; /* Green border */
+  border-radius: 4px; /* Optional: add border radius for rounded corners */
+  position: relative;
+}
+
+.checkbox:disabled:checked::before {
+  content: '';
+  display: block;
+  width: 4px;
+  height: 8px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  position: absolute;
+  top: 1px;
+  left: 5px;
+}
+
+
 label {
   display: block;
   margin-bottom: 8px;

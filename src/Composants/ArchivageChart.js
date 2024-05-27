@@ -67,7 +67,7 @@ const ArchivageChart = (props) => {
   };
 
   return (
-            <Doughnut data={data} options={options} />
+            <Doughnut style={{scale:'0.8'}} data={data} options={options} />
   );
 };
 
