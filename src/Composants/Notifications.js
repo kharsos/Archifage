@@ -43,9 +43,25 @@ export default function Notifications(){
                 </header>
                 <section>
                     {!form?<div className='notif'>
-                        {notification.map(e=><div style={{backgroundColor:'#61dafb',color:'white',fontWeight:'bold'}}>
-                            {e.notification}
-                        </div>)}
+                    <table className="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>Formateur</th>
+                                <th>Module</th>
+                                <th>Groupe</th>
+                                <th>Nombre de copie</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {notification.map(e=><tr>
+                            <td>{e.Formateur}</td>
+                            <td>{e.Module}</td>
+                            <td>{e.Groupe}</td>
+                            <td>{e.Nombre_de_copie}</td>
+                        </tr>)}
+                            </tbody>
+                        </table>
+ 
                     </div>
                     :<form>
                         <label className='form-label'>Formateur</label>    

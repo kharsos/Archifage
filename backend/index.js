@@ -39,6 +39,14 @@ app.get('/groupes/:f',(req,res)=>{
     .then(groupes=>res.status(200).json(groupes))
     .catch(err=>res.status(400).json(err))
 })
+//table recap affecter formateur
+app.get('/formateurGroupes/:id',(req,res)=>{
+    const id=req.params.id
+    Groupes.find({"Modules.formateur": id})
+    .then(groupes=>res.status(200).json(groupes))
+    .catch(err=>res.status(400).json(err))
+})
+
 app.post('/groupe/post',(req,res)=>{
     const {_id,filiere} = req.body
     const newGrp = new Groupes({_id,filiere,Modules:[]})

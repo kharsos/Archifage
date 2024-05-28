@@ -1,6 +1,7 @@
 import React from 'react'
 import { useEffect,useState } from 'react';
 import { useNavigate , Link} from 'react-router-dom';
+import { CSVLink } from 'react-csv';
 import '../App.css'
 import './Menu.css'
 import axios from 'axios';
@@ -54,7 +55,7 @@ function GestionFormateur(){
             <div className='split'>
                 <header>
                     <div>
-                        <button type='button' className='btnb'>Export CSV</button>
+                        <button type='button' className='btnb'><CSVLink data={formateur}>Export CSV</CSVLink> </button>
                         <button type='button' className='btnt' onClick={()=>setForm(!form)}>Ajouter Formateur</button>
                     </div>
                     <div>

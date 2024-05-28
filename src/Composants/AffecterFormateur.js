@@ -7,6 +7,7 @@ export default function AffecterFormateur(){
     const [fil,setfil]=useState('')
     const [grp,setGrp]=useState([])
     const [groupe,setGroupe]=useState('')
+    const [formateurgrps,setFormateurgrps]=useState([])
     const [modules,setModules]=useState([])
     const [info,setInfo]=useState({
         name:'',
@@ -25,6 +26,12 @@ export default function AffecterFormateur(){
         .catch(err=>console.log(err))
     },[fil])
 
+    useEffect(() => {
+        axios.get(`http://localhost:8080/formateurGroupes/${info.formateur}`)
+            .then(res => {setFormateurgrps(res.data);})
+            .catch(err => console.log(err));
+    }, [info]);
+    
     useEffect(()=>{
         if(fil!=''&&groupe==''){
         const filter = filiere.filter(e=>e.filiere==fil)
@@ -55,7 +62,11 @@ export default function AffecterFormateur(){
         }
         else{
             await axios.put(`http://localhost:8080/module/${groupe}`,info)
-            .then(()=>console.log('data created !'))
+            .then(()=>{console.log('data created !')
+            axios.get(`http://localhost:8080/formateurGroupes/${info.formateur}`)
+            .then(res => setFormateurgrps(res.data))
+            .catch(err => console.log(err));
+            })
             .catch(err=>console.log(err))
         }
     }
@@ -103,6 +114,33 @@ export default function AffecterFormateur(){
                </select>
                <button type="button" onClick={()=>addModule()}>Ajouter Module</button>
            </form>
+           <table className="table table-striped">
+            <thead>
+                <tr>
+                    <th>Groupe</th>
+                    <th>Modules</th>
+                </tr>
+            </thead>
+            <tbody>
+                {formateurgrps.map(groupe => (
+                    <tr key={groupe._id}>
+                        <td>{groupe._id}</td>
+                        <td>
+                            <ul>
+                            {groupe.Modules
+                                    .filter(module => module.formateur === info.formateur)
+                                    .map(filteredModule => (
+                                        <li key={filteredModule.id} style={{ margin: 0, padding: 0, listStyle: 'none' }}>
+                                            {filteredModule.name}
+                                        </li>
+                                    ))}
+                            </ul>
+                        </td>
+                    </tr>
+                ))}
+            </tbody>
+        </table>
+
        </section>
    </div>
 </div>

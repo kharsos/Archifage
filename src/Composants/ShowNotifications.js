@@ -30,9 +30,25 @@ export default function ShowNotification(){
                 <section>
                     <h1 style={{color:'#152259'}}>Notification</h1>
                     <div className='notif'>
-                        {notification.map(e=><div style={{backgroundColor:'#61dafb',color:'white',fontWeight:'bold',margin:"10px 20px"}}>
-                            {e.notification}
-                        </div>)}
+                    <table className="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>Formateur</th>
+                                <th>Module</th>
+                                <th>Groupe</th>
+                                <th>Nombre de copie</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {notification.map(e=><tr>
+                            <td>{e.Formateur}</td>
+                            <td>{e.Module}</td>
+                            <td>{e.Groupe}</td>
+                            <td>{e.Nombre_de_copie}</td>
+                        </tr>)}
+                            </tbody>
+                        </table>
+                        
                     </div>
                 </section>
         </div>

@@ -10,7 +10,11 @@ mongodb.connect('mongodb://127.0.0.1:27017/Project',
 const NotificationSchema = mongodb.Schema(
     {
         _id:Number,
-        notification:String
+        Fileormateur:String,
+        Module:String,
+        Groupe:String,
+        Nombre_de_copie:Number
+
     }
 )
 const Notification = mongodb.model('notifications',NotificationSchema);
