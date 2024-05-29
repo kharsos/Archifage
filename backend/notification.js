@@ -7,15 +7,47 @@ mongodb.connect('mongodb://127.0.0.1:27017/Project',
 })
 .then(()=>console.log('connexion avec mongodb notification reussi groupes !'))
 .catch(()=>console.log('connexion avec mongodb notification echouee groupes!'))
-const NotificationSchema = mongodb.Schema(
-    {
-        _id:Number,
-        Fileormateur:String,
-        Module:String,
-        Groupe:String,
-        Nombre_de_copie:Number
 
+
+
+const getCurrentMonth = () => {
+    const date = new Date();
+    const monthNames = [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+    return monthNames[date.getMonth()];
+};
+
+const NotificationSchema = new mongodb.Schema({
+    _id: 
+        {
+            type:Number
+        },
+    Module:
+        {
+            type: String
+        },
+    formateur: 
+        {
+            type:String
+        },
+    filiere: 
+        {   
+            type:String
+        },
+    Groupe: 
+        {
+            type:String
+        },
+    copie:
+        { 
+            type:Number
+        },
+    Date: {
+        type: String,
+        default: getCurrentMonth
     }
-)
+});
 const Notification = mongodb.model('notifications',NotificationSchema);
 module.exports=Notification

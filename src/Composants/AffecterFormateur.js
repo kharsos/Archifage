@@ -1,7 +1,8 @@
 import { useEffect , useState } from "react";
 import { useNavigate ,useParams ,Link} from "react-router-dom";
+import Menu from "./Menu";
 import axios from "axios";
-
+import './popup.css'
 export default function AffecterFormateur(){
     const {id} = useParams()
     const [fil,setfil]=useState('')
@@ -9,17 +10,60 @@ export default function AffecterFormateur(){
     const [groupe,setGroupe]=useState('')
     const [formateurgrps,setFormateurgrps]=useState([])
     const [modules,setModules]=useState([])
+    const [formateur,setFormateur] = useState('')
+    const navigate = useNavigate()
     const [info,setInfo]=useState({
         name:'',
+        type:'',
         formateur:id,
-        constroles:[]
+        controles:[
+            {
+                type:'cc',
+                status:false,
+                enonce:false,
+                presence:false,
+                copie:false,
+                pv:false,
+                numero_de_controle:1
+            },
+            {
+                type:'cc',
+                enonce:false,
+                status:false,
+                presence:false,
+                copie:false,
+                pv:false,
+                numero_de_controle:2
+            },
+            {
+                type:'cc',
+                enonce:false,
+                status:false,
+                presence:false,
+                copie:false,
+                pv:false,
+                numero_de_controle:3
+            },
+            {
+                type:'efm',
+                enonce:false,
+                status:false,
+                presence:false,
+                copie:false,
+                pv:false
+                ,numero_de_controle: 4 
+            }
+        ]
     })
     const [filiere,setFiliere]=useState([])
+    
     useEffect(()=>{
         axios.get(`http://localhost:8080/filiere`)
         .then(res=>setFiliere(res.data))
         .catch(err=>console.log(err))
-    })
+        axios.get(`http://localhost:8080/formateur/${id}`)
+        .then(res=>setFormateur(res.data.name))
+    },[])
     useEffect(()=>{
         axios.get(`http://localhost:8080/groupe/filiere/${fil}`)
         .then(res=>setGrp(res.data))
@@ -36,7 +80,6 @@ export default function AffecterFormateur(){
         if(fil!=''&&groupe==''){
         const filter = filiere.filter(e=>e.filiere==fil)
         setModules(filter[0].modules)
-        console.log(modules)
         }
         else if(fil!=''&&groupe!=''){
             const filterNames = grp.filter(e=>e._id==groupe)[0].Modules
@@ -55,7 +98,7 @@ export default function AffecterFormateur(){
                 ))
         }
     },[fil,groupe])
-
+    console.log(modules)
     const addModule=async()=>{
         if(info.formateur>0&&info.name==''){
             alert('verifier les information !!')
@@ -67,19 +110,20 @@ export default function AffecterFormateur(){
             .then(res => setFormateurgrps(res.data))
             .catch(err => console.log(err));
             })
+            let data = info
+            if(info.type==='R'){
+                data.controles[3]= {...data.controles[3],nom_du_correcteur:'',PV_de_repport:false}
+            }
+            console.log(data)
+            await axios.put(`http://localhost:8080/module/${groupe}`,data)
+            .then(()=>console.log('data created !'))
             .catch(err=>console.log(err))
-        }
+            navigate('/GestionFormateur')
+    }
     }
     return  <div>
-    <nav className="nav">
-       <img src='http://localhost:3000/ofppt.png' alt="logo"></img>
-       <h2 style={{color:'white'}}>NTIC SYBA</h2>
-       <hr></hr>
-       <Link to={'/GestionFormateur'}><button type='button' style={{backgroundColor:'transparent',border:'none'}} className="btns"><img src="http://localhost:3000/home.png" alt="home"></img><span>Formateur</span></button></Link>
-       <button type='button' className="btns" ><img src="http://localhost:3000/graduate.png" alt="home"></img><span>Groupes</span></button>
-       <Link to={'/GestionFiliere'}><button type='button' className='btns' style={{backgroundColor:'transparent',border:'none'}}><img src="http://localhost:3001/book.png" alt="book"></img><span>Filieres</span></button></Link>
-   </nav>
-   <div className="split">
+    <Menu />
+   <div className="split" id="bgPopUp">
         <header>
             <div>
                 <button type='button' className='btnb'>Export CSV</button>
@@ -106,9 +150,12 @@ export default function AffecterFormateur(){
                         </option>)}
                </select>
                <label className="form-label">name</label>
-               <select onClick={(e)=>setInfo({...info,name:e.target.value})}>
+               <select onClick={(e)=>{
+                if(e.target.value){
+                    const values = JSON.parse(e.target.value)
+                    setInfo({...info,name:values.name,type:values.type})}}}>
                     <option value={''}>Choisisser un module</option>
-                   {modules==null?'':modules.map((e)=><option value={e.name}>
+                   {modules==null?'':modules.map((e)=><option value={JSON.stringify({name:e.name,type:e.type})}>
                        {e.name}
                    </option>)}
                </select>

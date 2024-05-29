@@ -1,6 +1,7 @@
 import { Link , useNavigate } from "react-router-dom"
 import './Menu.css'
 import {useState , useEffect} from 'react';
+import Menu from "./Menu";
 import axios from "axios";
 export default function Groupes(){
     const navigate = useNavigate()
@@ -34,14 +35,7 @@ export default function Groupes(){
     }
     return (
         <div>
-             <nav className="nav">
-                <img src='http://localhost:3000/ofppt.png' alt="logo"></img>
-                <h2 style={{color:'white'}}>NTIC SYBA</h2>
-                <hr></hr>
-                <Link to={'/GestionFormateur'}><button type='button' style={{backgroundColor:'transparent',border:'none'}} className="btns"><img src="http://localhost:3000/home.png" alt="home"></img><span>Formateur</span></button></Link>
-                <button type='button' className="btns" ><img src="http://localhost:3000/graduate.png" alt="home"></img><span>Groupes</span></button>
-                <Link to={'/GestionFiliere'}><button type='button' className='btns' style={{backgroundColor:'transparent',border:'none'}}><img src="http://localhost:3000/book.png" alt="book"></img><span>Filieres</span></button></Link>
-            </nav>
+            <Menu />
             <div className="split">
             <header>
                     <button type='button' style={{marginLeft:'10px'}} onClick={()=>setGrp(true)} className='btnt'>Add Groupe</button>

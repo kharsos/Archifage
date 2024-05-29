@@ -4,6 +4,7 @@ const cors= require('cors')
 const Users=require('./db')
 const Groupes = require('./grp')
 const Notification = require('./notification')
+const axios = require('axios')
 const Filiere = require('./filiere')
 const mongoose = require('mongoose')
 app.use(express.json())
@@ -47,18 +48,37 @@ app.get('/formateurGroupes/:id',(req,res)=>{
     .catch(err=>res.status(400).json(err))
 })
 
-app.post('/groupe/post',(req,res)=>{
+
+app.post('/groupe/post',async(req,res)=>{
     const {_id,filiere} = req.body
-    const newGrp = new Groupes({_id,filiere,Modules:[]})
-    newGrp.save()
-    .then(groupe=>res.status(200).json(groupe))
-    .catch(err=>res.status(400).json(err))
+    const existed = await Groupes.findOne({_id:_id})
+    if(!existed){
+        const newGrp = new Groupes({_id,filiere,Modules:[]})
+        newGrp.save()
+        .then(groupe=>res.status(200).json(groupe))
+        .catch(err=>res.status(400).json(err))
+    }
+    else{
+        return res.status(400).json('group existed !')
+    }
 })
-app.get('/groupe/:id',(req,res)=>{
+app.get('/groupe/:id',async(req,res)=>{
     const id =req.params.id
-    Groupes.findOne({_id:id})
+    await Groupes.findOne({_id:id})
     .then(groupes=>res.status(200).json(groupes))
     .catch(err=>res.status(400).json(err))
+})
+
+app.get('/groupe/:id/formateurs',async(req,res)=>{
+    const id = req.params.id;
+    const groupe = await Groupes.findOne({ _id: id });
+    const formateursDistincts = groupe.Modules.map(module => module.formateur);
+    let result = []
+    for(count = 0 ; count < formateursDistincts.length ; count ++){
+        const user = await Users.findOne({_id:formateursDistincts[count]})
+        result.push(user.name)
+    }
+    res.status(200).json(result)
 })
 
 app.get('/groupe/filiere/:filiere',(req,res)=>{
@@ -72,9 +92,7 @@ app.get('/groupe/filiere/:filiere',(req,res)=>{
 app.put('/module/:id',async (req,res)=>{
     const data = req.body
     if(data.name!=''&&data.formateur>0){
-    const result=await Filiere.findOne({modules:{$elemMatch:{name:data.name}}},{'modules.$':1})
-    const {id,type}=result.modules[0]
-    Groupes.updateOne({ _id:req.params.id },{$push:{Modules:{...data,id:id,type:type}}})
+    Groupes.updateOne({ _id:req.params.id },{$push:{Modules:{...data}}})
     .then(grp=>res.json(grp))
     .catch(err=>res.json({err:'not'}))
     }
@@ -100,22 +118,21 @@ app.get('/notification',(req,res)=>{
 })
 
 app.post('/post/notification',async(req,res)=>{
-    const {notification} = req.body
     let id = await Notification.findOne().sort({_id:-1})
     if(id===null){
         id=0
     }
     else{id=id._id}
     console.log(id)
-    const newNotification = new Notification({_id:id+1,notification:notification})
+    const newNotification = new Notification({_id:id+1,...req.body})
     newNotification.save()
     .then(notif=>res.status(200).json(notif))
     .catch(err=>res.status(400).json(err))
 })
 
-app.get('/filiere/:name',(req,res)=>{
+app.get('/filiere/:name',async(req,res)=>{
     let filiere=req.params.name
-    Filiere.findOne({filiere:filiere})
+    await Filiere.findOne({filiere:filiere})
     .then(filiere=>res.status(200).json(filiere))
     .catch(err=>res.status(400).json(err))
 })
@@ -151,9 +168,83 @@ app.get('/get/:id',(req,res)=>{
 app.put('/post/module/:id',(req,res)=>{
     const id=req.params.id
     const data = req.body
-    Filiere.updateOne({_id:id},{$push:{modules:{...data}}})
+    Filiere.updateOne({_id:id},{$push:{modules:req.body}})
     .then(fil=>res.status(200).json(fil))
     .catch(err=>res.status(400).json(err))
 })
+
+app.get('/Modules_formateur/:formateur',async(req,res)=>{
+    await Groupes.aggregate([{$unwind:"$Modules"},{$match:{'Modules.formateur':req.params.formateur}},{$project:{_id:1,Modules:1,filiere:1}}])
+    .then(mod=>res.status(200).json(mod))
+    .catch(err=>res.status(400).json(err))
+})
+
+app.put('/Modules_formateur/:grp/:module',async(req,res)=>{
+    if(req.body.numero_de_controle<4){
+         await Groupes.updateOne(
+            { _id: req.params.grp, "Modules.name": req.params.module },
+            { $set: { 
+                [`Modules.$.controles.${req.body.numero_de_controle-1}.enonce`]: req.body.enonce , 
+                [`Modules.$.controles.${req.body.numero_de_controle-1}.pv`]: req.body.pv , 
+                [`Modules.$.controles.${req.body.numero_de_controle-1}.presence`]: req.body.presence , 
+                [`Modules.$.controles.${req.body.numero_de_controle-1}.copie`]: req.body.copie ,
+                [`Modules.$.controles.${req.body.numero_de_controle-1}.status`]:req.body.status
+            }
+            })
+            .then(result=>res.send(result))
+            .catch(err=>res.send(err))
+    }
+    else if(req.body.numero_de_controle===4 && req.body.type==='R'){
+        await Groupes.updateOne(
+            { _id: req.params.grp, "Modules.name": req.params.module },
+            { $set: { 
+                [`Modules.$.controles.${req.body.numero_de_controle-1}.enonce`]: req.body.enonce , 
+                [`Modules.$.controles.${req.body.numero_de_controle-1}.pv`]: req.body.pv , 
+                [`Modules.$.controles.${req.body.numero_de_controle-1}.PV_de_repport`]: req.body.PV_de_repport , 
+                [`Modules.$.controles.${req.body.numero_de_controle-1}.presence`]: req.body.presence , 
+                [`Modules.$.controles.${req.body.numero_de_controle-1}.copie`]: req.body.copie , 
+                [`Modules.$.controles.${req.body.numero_de_controle-1}.nom_du_correcteur`]:req.body.nom_du_correcteur,
+                [`Modules.$.controles.${req.body.numero_de_controle-1}.status`]:req.body.status 
+            } 
+            })
+            .then(result=>res.send(result))
+            .catch(err=>res.send(err))
+    }
+    else if(req.body.numero_de_controle===4 && req.body.type==='L'){
+        await Groupes.updateOne(
+            { _id: req.params.grp, "Modules.name": req.params.module },
+            { $set: { 
+                [`Modules.$.controles.${req.body.numero_de_controle-1}.enonce`]: req.body.enonce , 
+                [`Modules.$.controles.${req.body.numero_de_controle-1}.pv`]: req.body.pv ,
+                [`Modules.$.controles.${req.body.numero_de_controle-1}.presence`]: req.body.presence , 
+                [`Modules.$.controles.${req.body.numero_de_controle-1}.copie`]: req.body.copie ,
+                [`Modules.$.controles.${req.body.numero_de_controle-1}.status`]:req.body.status 
+            } 
+            })
+            .then(result=>res.send(result))
+            .catch(err=>res.send(err))
+    }
+})
+
+app.get('/groupes/modules/percentage',async(req,res)=>{
+    await Groupes.aggregate([{$unwind:"$Modules"},{$project:{_id:1,Modules:1,filiere:1}}])
+    .then(mod=>res.status(200).json(mod))
+    .catch(err=>res.status(400).json(err))
+})
+
+app.get('/notifications/groupe',async(req,res)=>{
+    await Notification.aggregate([{$match:{}},{$group:{_id:'$Date',totalCopies:{$sum:'$copie'}}}])
+    .then(result=>res.status(200).json(result))
+    .catch(err=>res.send(err))
+})
+
+app.get('/notifications/groupe/:formateur',async(req,res)=>{
+    const formateur = req.params.formateur
+    await Notification.aggregate([{$match:{formateur:formateur}},{$group:{_id:'$Date',totalCopies:{$sum:'$copie'}}}])
+    .then(result=>res.status(200).json(result))
+    .catch(err=>res.send(err))
+        
+})
+
 
 app.listen(8080,console.log('connexion reussi !!')) 

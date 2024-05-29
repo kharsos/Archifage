@@ -1,0 +1,11 @@
+#popUp{
+    z-index: 30;
+    position:absolute;
+    transform: scale(80%);
+    background-color: white;
+    border-radius: 10px;
+    padding: 250px;
+    top: 110px;
+    border: 2px solid black;
+    left: 200px;
+}
