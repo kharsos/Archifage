@@ -126,7 +126,7 @@ export default function AffecterFormateur(){
         <span className="navbar-toggler-icon">---</span>
     </button>
     <div className="row">
-    <Menu />
+    <Menu page={'GestionFormateur'}/>
    <div className="col-md-9 ms-sm-auto col-lg-10 px-md-4">
         <header>
             <div>

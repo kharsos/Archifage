@@ -27,7 +27,7 @@ export default function GestionFiliere() {
                 <span className="navbar-toggler-icon">---</span>
             </button>
             <div className="row">
-                <Menu />
+                <Menu page={'Filiere'}/>
                 <main className="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                     <div>
                         <header>

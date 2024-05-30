@@ -4,6 +4,7 @@
   background-color: #152259;
   color: white;
   z-index: 50;
+  position: sticky;
 }
 
 

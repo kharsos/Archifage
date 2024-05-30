@@ -83,7 +83,7 @@ export default function Modules() {
                 <span className="navbar-toggler-icon">---</span>
             </button>
             <div className="row">
-                <Menu />
+            <Menu page={'Groupes'}/>
                 <main className="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                     <div>
                         <header>
@@ -129,7 +129,7 @@ export default function Modules() {
                                             <tr key={index}>
                                                 <td>{fomateurs[index]}</td>
                                                 <td><h6>{e.name}</h6></td>
-                                                <td><h6>{e.type}</h6></td>
+                                                <td><h6>{e.type==='R'?'Regional':'Local'}</h6></td>
                                                 {e.controles ? e.controles.map((ctrl, ctrlIndex) => {
                                                     if (ctrl.type === 'cc') {
                                                         return (

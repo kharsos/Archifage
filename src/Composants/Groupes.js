@@ -39,7 +39,7 @@ export default function Groupes() {
                 <span className="navbar-toggler-icon">---</span>
             </button>
             <div className="row">
-                <Menu />
+                <Menu page={'Groupes'}/>
                 <main className="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                     <div>
                         <header>
