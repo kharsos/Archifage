@@ -30,9 +30,13 @@ export default function AjouterModule(){
         }
     }
     return(
-        <div>
+        <div className="container-fluid">
+    <button className="navbar-toggler btn-light" type="button" data-bs-toggle="collapse" data-bs-target="#sidenav" aria-controls="sidenav" aria-expanded="false" aria-label="Toggle navigation">
+        <span className="navbar-toggler-icon">---</span>
+    </button>
+    <div className="row">
     <Menu />
-   <div className="split">
+   <div className="col-md-9 ms-sm-auto col-lg-10 px-md-4">
         <header>
             <div>
                 <button type='button' className='btnb'>Export CSV</button>
@@ -77,6 +81,7 @@ export default function AjouterModule(){
             </table>
         </section>
    </div>
+</div>
 </div>
     )
 }

@@ -92,9 +92,15 @@ app.get('/groupe/filiere/:filiere',(req,res)=>{
 app.put('/module/:id',async (req,res)=>{
     const data = req.body
     if(data.name!=''&&data.formateur>0){
-    Groupes.updateOne({ _id:req.params.id },{$push:{Modules:{...data}}})
-    .then(grp=>res.json(grp))
-    .catch(err=>res.json({err:'not'}))
+    const exist = await Groupes.findOne({_id:req.params.id,'Modules.name':data.name})
+        if(!exist){
+            await Groupes.updateOne({ _id:req.params.id },{$push:{Modules:{...data}}})
+            .then(grp=>res.json(grp))
+            .catch(err=>res.json({err:'not'}))
+        }
+        else{
+            res.send('module exist')
+        }
     }
 })
 
@@ -165,10 +171,10 @@ app.get('/get/:id',(req,res)=>{
     .catch(err=>res.status(400).json(err))
 })
 
-app.put('/post/module/:id',(req,res)=>{
+app.put('/post/module/:id',async(req,res)=>{
     const id=req.params.id
     const data = req.body
-    Filiere.updateOne({_id:id},{$push:{modules:req.body}})
+    await Filiere.updateOne({_id:id},{$push:{modules:req.body}})
     .then(fil=>res.status(200).json(fil))
     .catch(err=>res.status(400).json(err))
 })
