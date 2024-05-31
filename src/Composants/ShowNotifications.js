@@ -73,7 +73,7 @@ export default function ShowNotification(){
                             <tbody>
                                 {
                                     notification.map(e=><tr>
-                                        <td>{e.formateur}</td>
+                                        <td>{e.Formateur}</td>
                                         <td>{e.Module}</td>
                                         <td>{e.Groupe}</td>    
                                         <td>{e.filiere}</td>

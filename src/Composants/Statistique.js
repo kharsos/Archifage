@@ -31,6 +31,7 @@ export default function Statistique(){
             setShowChart(false)
         }
     },[teacherId])
+    console.log(teachers);
     return  <div>
     <Menu />
    <div className="split">
@@ -52,6 +53,7 @@ export default function Statistique(){
                     <select onClick={(e)=>setTeacherId(e.target.value)}>
                         <option value={0}>Choisisser un formateur</option>
                         {
+
                             teachers.map(formateur=><option value={formateur._id}>{formateur._id} - {formateur.name}</option>)
                         }
                     </select>
