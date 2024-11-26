@@ -53,7 +53,10 @@ export default function Login() {
     }
   };
   return (
-    <div className="body" >   
+    <div className="body" > 
+        <button className="navbar-toggler btn-light" type="button" data-bs-toggle="collapse" data-bs-target="#sidenav" aria-controls="sidenav" aria-expanded="false" aria-label="Toggle navigation">
+                <span className="navbar-toggler-icon">---</span>
+            </button>  
         <div className="form-container sign-in-container">
           <form action="#" onSubmit={connexion} style={{width:'500px'}}>
 		  <img src='ofppt.png' alt="logo"></img>

@@ -149,12 +149,15 @@ header div{
   align-items: center;
 }
 
-
+main{
+  text-align: center;
+}
 
 .filter{
   display: flex;
   justify-content: space-between;
-  width: 50%;
+  width: 80%;
+  flex-wrap: wrap;
   margin: 0 auto;
 }
 

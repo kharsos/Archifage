@@ -133,7 +133,7 @@ const CopiesChart = () => {
                     <option value={''}>all</option>
                     {formateur.map(f=><option value={f.name}>{f.name}</option>)}
         </select>
-        <Bar data={data} options={options} style={{scale:'0.8'}}/>;
+        <Bar data={data} options={options}/>;
     </>
 };
 

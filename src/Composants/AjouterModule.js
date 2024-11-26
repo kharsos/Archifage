@@ -30,12 +30,16 @@ export default function AjouterModule(){
         }
     }
     return(
-        <div>
-    <Menu />
-   <div className="split">
+        <div className="container-fluid">
+    <button className="navbar-toggler btn-light" type="button" data-bs-toggle="collapse" data-bs-target="#sidenav" aria-controls="sidenav" aria-expanded="false" aria-label="Toggle navigation">
+        <span className="navbar-toggler-icon">---</span>
+    </button>
+    <div className="row">
+    <Menu page={'Filiere'}/>
+   <main className="col-md-9 ms-sm-auto col-lg-10 px-md-4">
         <header>
             <div>
-                <button type='button' className='btnb'>Export CSV</button>
+                <button type='button' className='btnb'>Gestion Filiere</button>
             </div>
             <div>
             <Link to={'/ShowNotifications'}><img style={{width:'30px'}} src='http://localhost:3000/bell.png'></img></Link>
@@ -56,7 +60,7 @@ export default function AjouterModule(){
                     {filiere===null?'':modules.map(e=><tr>
                         <td>{e.id}</td>
                         <td>{e.name}</td>
-                        <td>{e.type}</td>
+                        <td>{e.type==='R'?'Regional':'Local'}</td>
                     </tr>)}
                     <tr>
                         <td><input onChange={(e)=>setInfo({...info,id:e.target.value})} className="form-control" placeholder="evriver id" type='text'></input></td>
@@ -76,7 +80,8 @@ export default function AjouterModule(){
                 </tbody>
             </table>
         </section>
-   </div>
+   </main>
+</div>
 </div>
     )
 }

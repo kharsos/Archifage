@@ -121,16 +121,19 @@ export default function AffecterFormateur(){
             navigate('/GestionFormateur')
     }
     }
-    return  <div>
-    <Menu />
-   <div className="split" id="bgPopUp">
+    return <div className="container-fluid">
+    <button className="navbar-toggler btn-light" type="button" data-bs-toggle="collapse" data-bs-target="#sidenav" aria-controls="sidenav" aria-expanded="false" aria-label="Toggle navigation">
+        <span className="navbar-toggler-icon">---</span>
+    </button>
+    <div className="row">
+    <Menu page={'GestionFormateur'}/>
+   <div className="col-md-9 ms-sm-auto col-lg-10 px-md-4">
         <header>
             <div>
-                <button type='button' className='btnb'>Export CSV</button>
+                <button type='button' className='btnb'>{formateur}</button>
             </div>
             <div>
             <Link to={'/ShowNotifications'}><img style={{width:'30px'}} src='http://localhost:3000/bell.png'></img></Link>
-            <Link to={'/'}><button type='button' className='btnb'>Log out</button></Link>
             </div>
         </header>
        <section>
@@ -191,5 +194,5 @@ export default function AffecterFormateur(){
        </section>
    </div>
 </div>
-
+</div>
 }
